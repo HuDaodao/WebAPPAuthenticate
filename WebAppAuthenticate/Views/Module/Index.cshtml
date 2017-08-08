@@ -54,6 +54,7 @@
 
         //新增模块
         function AddCreate(moduleId) {
+            $("#moduleId").val("");
             var loadUrl = "/Module/ModuleDetail?id=" + moduleId;
             $("#panel_Edit").load(loadUrl);
         }
