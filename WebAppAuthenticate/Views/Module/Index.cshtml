@@ -1,0 +1,275 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/H_LayOut.cshtml";
+}
+
+@section TitleSection{
+    Dictionary
+    }
+@section HeaderSection{
+    @*jsTree*@
+    <script src="~/Scripts/jstree.js"></script>
+    @*<script src="~/Scripts/jstree.contextmenu.js"></script>
+    <script src="~/Scripts/jstree.state.js"></script>
+    <script src="~/Scripts/jstree.types.js"></script>*@
+    <link href="~/Content/style.min.css" rel="stylesheet" />
+    @*DataTable*@
+    <link href="~/Content/jquery.dataTables.css" rel="stylesheet"/>
+    <link href="~/Content/dataTables.bootstrap.css" rel="stylesheet"/>
+    <script src="~/Scripts/jquery.dataTables.js"></script>
+    <script src="~/Scripts/dataTables.bootstrap.js"></script>
+    <style type="text/css">
+        li {
+            list-style-type: none;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function() {
+            MainDictionjsTree();
+        });
+
+        //jstree
+        function MainDictionjsTree() {
+            $("#jsTree") .jstree({
+                    "core": {
+                        "multiple": false,
+                        "animation": 0,
+                        "themes": "",
+                        "data": {
+                            "url": "/Dictionary/TreeList",
+                            "datatype": "json",
+                            "data": function(node, callback) {
+                                return { "id": "#" };
+                            }
+                        }
+                    },
+                    "types": {
+                        "default": { "icon": "glyphicon glyphicon-asterisk" }
+                    },
+                    "state": { "key": "state_demo" },
+                    "themes": {
+                        "themes": "default",
+                        "dots": true,
+                        "icon": false
+                    },
+                    "plugins": ["state", "types", "themes"]
+                })
+                .bind("select_node.jstree",
+                    function(e, data) {
+                        var inst = data.instance;
+                        var selectedNode = inst.get_node(data.selected);
+                        DictionDataTable(selectedNode.id);
+                        $("#mainId").val(selectedNode.id);
+                    });
+        }
+
+        //新增数据字典主表
+        function AddCreate(action) {
+            var mainDicId;
+            if (action === 1) {
+                var ref = $("#jsTree").jstree(true);
+                mainDicId = ref.get_selected();
+            } else {
+                mainDicId = 0;
+            }
+            var loadUrl = "/Dictionary/MainDictionDetail?id=" + mainDicId;
+            $("#mainDicForm").load(loadUrl,
+                function() {
+                    $("#mainDicForm").modal("show");
+                });
+        }
+
+        //删除数据字典主表
+        function Delete() {
+            var ref = $("#jsTree").jstree(true);
+            var sel = ref.get_selected();
+            if (!sel.length) {
+                alert("请选择一个子节点！");
+                return false;
+            }
+            var deleteCheck = confirm("确认删除这条数据？");
+            if (deleteCheck) {
+                $.ajax({
+                    url: "/Dictionary/DeleteMain?id=" + sel,
+                    datatype: "json",
+                    type: "post",
+                    success: function(data) {
+                        if (data != null) {
+                            $("#jsTree").jstree(true).refresh();
+                            MainDictionjsTree();
+                        } else {
+                            alert("删除失败！");
+                        }
+                    }
+                });
+            }
+            return false;
+        }
+
+        //数据字典项列表
+        function DictionDataTable(mainDicId) {
+            $("#dictionDataTable").DataTable({
+                "bPaginate": true,
+                "bSort": true,
+                "bAutoWidth": true,
+                "searching": false,
+                "columns": [
+                    { "data": "ChineseName" },
+                    { "data": "EnglishName" },
+                    { "data": "Order" },
+                    { "data": "Status" },
+                    { "data": "LastChangeUser" },
+                    { "data": "LastChangeTime" }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": [6],
+                        "data": "Id",
+                        "render": function(data, type, full) {
+                            return '<a class="edit" data-toggle="modal" onclick="AddCreatDic(' +
+                                data +
+                                ')"><i class="glyphicon glyphicon-pencil"></i></a> | <a class="delete" href="javascript:void(0);" onclick="DeleteDic(' +
+                                data +
+                                ')"><i class="glyphicon glyphicon-remove"></i></a>';
+                        }
+                    },
+                    {
+                        "targets": [0, 1, 3, 4, 5],
+                        "bSortable": false
+                    }
+                ],
+                "destroy": true,
+                "bProcessing": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Dictionary/DictionList",
+                "fnServerData": function(sSource, aoData, fnCallback) {
+                    var data = {};
+                    for (var i = 0; i < aoData.length; i++) {
+                        if (aoData[i].name === "iDisplayStart") {
+                            data.PageStart = aoData[i].value;
+                        }
+                        if (aoData[i].name === "iDisplayLength") {
+                            data.PageSize = aoData[i].value;
+                        }
+                        if (aoData[i].name === "sEcho") {
+                            data.Draw = aoData[i].value;
+                        }
+                        if (aoData[i].name === "iSortCol_0") {
+                            data.SortCol = aoData[i].value;
+                        }
+                        if (aoData[i].name === "sSortDir_0") {
+                            data.SortDir = aoData[i].value;
+                        }
+                        data.MainDicId = mainDicId;
+                    }
+                    $.ajax({
+                        "type": "post",
+                        "url": sSource,
+                        "dataType": "json",
+                        "data": {
+                            "searchBase": data
+                        },
+                        "success": function(resp) {
+                            fnCallback(resp);
+                        }
+                    });
+                },
+                oLanguage: {
+                    "sProcessing": "正在加载中......",
+                    "sLengthMenu": "每页显示 _MENU_ 条记录",
+                    "sZeroRecords": "未查到数据！",
+                    "sEmptyTable": "表中无数据存在！",
+                    "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
+                    "sInfoFiltered": "数据表中共为 _MAX_ 条记录",
+                    "oPaginate": {
+                        "sFirst": "首页",
+                        "sPrevious": "上一页",
+                        "sNext": "下一页",
+                        "sLast": "末页"
+                    }
+                }
+
+            });
+        }
+
+        //新增修改数据字典项
+        function AddCreatDic(data) {
+            var mainId = $("#mainId").val();
+            var loadUrl = "/Dictionary/DictionDetail?id=" + data;
+            $("#dicForm").load(loadUrl,
+                function() {
+                    $("#dicForm").modal("show");
+                    $("#MainDictionaryId").val(mainId);
+                });
+        }
+
+        //保存数据字典项
+        function DicSave() {
+            var loadUrl = "/Dictionary/DictionDetail";
+            $("#dicForm").load(
+                loadUrl,
+                function() {
+                    alert("dicForm");
+                });
+        }
+
+        //删除数据字典项
+        function DeleteDic(data) {
+            var deleteCheck = confirm("确认删除这条数据？");
+            if (deleteCheck) {
+                $.ajax({
+                    url: "/Dictionary/DeleteDic?id=" + data,
+                    datatype: "json",
+                    type: "post",
+                    success: function(data) {
+                        if (data != null) {
+                            alert("删除成功！");
+                            DictionDataTable($("#mainId").val());
+                        } else {
+                            alert("删除失败！");
+                        }
+                    }
+                });
+            }
+            return false;
+        }
+    </script>
+}
+
+<div class="row">
+    @* 数据字典树*@
+    <div class="col-md-2">
+        <div class="row" style="margin: 2px;">
+            <button id="creatMainbtn" onclick="AddCreate(0);" role="button" class="btn btn-success btn-sm" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i> </button>
+            <button id="editMainbtn" onclick="AddCreate(1);" role="button" class="btn btn-warning btn-sm" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i> </button>
+            <button id="deletMainbtn" onclick="Delete();" role="button" class="btn btn-danger btn-sm" data-toggle="modal"><i class="glyphicon glyphicon-remove"></i></button>
+        </div>
+        <div id="jsTree" class="demo" style="margin-top: 1em; min-height: 200px;"></div>
+    </div>
+    
+    <input type="hidden" id="mainId"/>
+
+    @*数据字典列表*@
+    <div class="col-md-10">
+        <button id="creatbtn" onclick="AddCreatDic(0);" role="button" class="btn btn-success btn-sm" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i> 新建数据字典项</button>
+        <div class="row" style="margin: 10px;">
+            <table id="dictionDataTable" class="table">
+                <thead>
+                <tr>
+                    <th>中文名</th>
+                    <th>英文名</th>
+                    <th>排序</th>
+                    <th>是否启用</th>
+                    <th>最后修改人</th>
+                    <th>最后修改时间</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@*tree弹出框*@
+<div class="modal fade" id="mainDicForm" role="dialog" aria-hidden="true"  aria-labelledby="myModalLabel"></div>
+<div class="modal fade" id="dicForm" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel"></div>

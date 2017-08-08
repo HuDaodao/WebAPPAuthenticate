@@ -1,0 +1,241 @@
+﻿@model WebAppAuthenticate.ViewModels.UserFormViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/H_LayOut.cshtml";
+}
+
+@section TitleSection{
+    UserList
+}
+
+@section HeaderSection
+{
+    <link href="~/Content/jquery.dataTables.css" rel="stylesheet"/>
+    <link href="~/Content/dataTables.bootstrap.css" rel="stylesheet"/>
+    <script src="~/Scripts/jquery.dataTables.js"></script>
+    <link href="~/Content/style.min.css" rel="stylesheet" />
+    
+    <script src="~/Scripts/jstree.min.js"></script>
+    
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            DataTable(null, null);
+        });
+
+        function SaveUser() {
+            $("#userForm").submit(function (e) {
+                e.preventDefault();
+                if (NameValid().form()) {
+                    var data = $("#userForm").serialize();
+                    $.ajax({
+                        url: "/UserManage/Save",
+                        type: "post",
+                        datatype: "json",
+                        async: false,
+                        data: data,
+                        success: function (result) {
+                            if (result !== "access") {
+                                alert(result);
+                            } else {
+                                $("#closeBtn1").click();
+                                DataTable(null, null);
+                            }
+                        },
+                    });
+                }
+                else {
+                    return;
+                }
+            });
+        }
+
+        //验证重名
+        function NameValid() {
+            return $("#userForm").validate({
+                rules: {
+                    UserName: {
+                        remote: {
+                            cache: false,
+                            async: false,
+                            url: "/UserManage/CheckUserName",
+                            type: "post",
+                            datatype: "json",
+                            data: {
+                                userName: function () {
+                                    return $("#UserName").val();
+                                },
+                                id: function () {
+                                    return $("#Id").val();
+                                }
+                            },
+                            //dataFilter: function (data, type) { return data.result; }
+                        }
+                    }
+                },
+                messages: {
+                    UserName: {
+                        remote: "这个名字已经有人用过了"
+                    }
+                }
+            });
+        }
+
+
+        //DataTable
+        function DataTable(userName, realName) {
+            $("#dataTable").DataTable({
+                "bPaginate": true, 
+                "bSort": true,
+                "bAutoWidth": true,
+                "searching": false, 
+                "columns": [
+                    { "data": "UserName" },
+                    { "data": "RealName" },
+                    { "data": "Status" },
+                    { "data": "MobilePhont" },
+                    { "data": "Phone" },
+                    { "data": "Email" }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": [6],
+                        "data": "Id",
+                        "render": function(data, type, full) {
+                            return '<a class="edit" data-toggle="modal" onclick="EditUser(' + data + ')"><i class="glyphicon glyphicon-pencil"></i></a> | <a class="delete" href="javascript:void(0);" onclick="DeleteFunc(' + data + ')"><i class="glyphicon glyphicon-remove"></i></a>';
+                        }
+                    },
+                    {
+                        "targets": [0, 2, 3, 4, 5],
+                        "bSortable": false
+                    }
+                ],
+                "destroy": true,
+                "bProcessing": false, 
+                "bServerSide": true, 
+                "sAjaxSource": "/UserManage/DataList", 
+                "sDom": "Tflt<'row DTTTFooter'<'col-sm-6'i><'col-sm-6'p>>",
+                "fnServerData": function(sSource, aoData, fnCallback) {
+                    var data = {};
+                    for (var i = 0; i < aoData.length; i++) {
+                        if (aoData[i].name === "iDisplayStart") {
+                            data.PageStart = aoData[i].value;
+                        }
+                        if (aoData[i].name === "iDisplayLength") {
+                            data.PageSize = aoData[i].value;
+                        }
+                        if (aoData[i].name === "sEcho") {
+                            data.Draw = aoData[i].value;
+                        }
+                        if (aoData[i].name === "iSortCol_0") {
+                            data.SortCol = aoData[i].value;
+                        }
+                        if (aoData[i].name === "sSortDir_0") {
+                            data.SortDir = aoData[i].value;
+                        }
+                    }
+                    data.UserName = userName,
+                        data.RealName = realName,
+                        $.ajax({
+                            'type': 'post',
+                            "url": sSource,
+                            "dataType": "json",
+                            "data": {
+                                "searchBase": data
+                            },
+                            "success": function(resp) {
+                                fnCallback(resp);
+                            }
+                        });
+                },
+                oLanguage: { 
+                    "sProcessing": "正在加载中......",
+                    "sLengthMenu": "每页显示 _MENU_ 条记录",
+                    "sZeroRecords": "未查到数据！",
+                    "sEmptyTable": "表中无数据存在！",
+                    "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
+                    "sInfoFiltered": "数据表中共为 _MAX_ 条记录",
+                    //"sSearchPlaceholder": "🔍 姓名", //搜索框内占位符
+                    //"sSearch": "查找 ", //搜索框前的字体
+                    "oPaginate": {
+                        "sFirst": "首页",
+                        "sPrevious": "上一页",
+                        "sNext": "下一页",
+                        "sLast": "末页"
+                    }
+                }
+            });
+        }
+
+        //查找按钮
+        function SearchUsers() {
+            var userName = $("#UserName").val();
+            var realName = $("#RealName").val();
+            DataTable(userName, realName);
+        }
+
+        //新增修改
+        function EditUser(id) {
+            var loadUrl = "/UserManage/UserDetail?id=" + id;
+            $("#userModel").load(loadUrl,
+                function() {
+                    $("#userModel").modal("show");
+                });
+        }
+
+        //删除
+        function DeleteFunc(id) {
+            var deleteCheck = confirm("确认删除这条数据？");
+            if (deleteCheck) {
+                $.ajax({
+                    url: "Delete?id=" + id,
+                    datatype: "json",
+                    type: "Post",
+                    success: function(data) {
+                        if (data !== null) {
+                            DataTable();
+                        } else {
+                            alert("删除失败");
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+} 
+
+@*DataTable*@
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="UserName" maxlength="50" placeholder="用户名"/>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="RealName" maxlength="50" placeholder="真名" />
+        </div>
+        <div class="col-md-4">
+            <input type="button" value="查询" class="btn btn-primary" onclick="SearchUsers()" />
+            <input type="button" value="新增" class="btn btn-primary" onclick ="EditUser(0)" data-toggle="modal"/>
+        </div>
+    </div>
+    <div class="row" style ="margin: 15px;">
+        <table id="dataTable" class="table">
+            <thead >
+            <tr>
+                <th>用户名</th>
+                <th>真名</th>
+                <th>是否启用</th>
+                <th>手机号</th>
+                <th>办公电话</th>
+                <th>邮箱 </th>
+                <th>操作 </th>
+            </tr>
+            <thead>
+        </table>
+    </div>
+</div>
+
+@*弹出框*@
+<div class="modal fade" id="userModel" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>

@@ -1,0 +1,105 @@
+﻿@using WebAppAuthenticate.ViewModels
+@model WebAppAuthenticate.ViewModels.RoleFormViewModel
+
+@*<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>*@
+    
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel">
+                用户信息
+            </h4>
+        </div>
+        <div class="modal-body">
+            <div class="tabbable" id="tabs">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#panel_userBaseMsg" data-toggle="tab">用户基本信息管理</a>
+                    </li>
+                    <li>
+                        <a href="#panel_userHaveRoles" data-toggle="tab">管理员用户角色选择</a>
+                    </li>
+                    <li>
+                        <a href="#panel_userModule" data-toggle="tab">模块角色</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="panel_userBaseMsg">
+                        @using (Html.BeginForm("Save", "Role", FormMethod.Post,new{id="roleForm"}))
+                        {
+                            <div class="form-horizontal">
+                                @Html.HiddenFor(mode=>Model.Id)
+                                @*角色名*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.RoleName, new {@class = "control-label col-md-2"})
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.RoleName, new {htmlAttributes = new {@class = "form-control", required = true,maxlength = 50 } })
+                                        @Html.ValidationMessageFor(model => model.RoleName, "", new {@class = "text-danger"})
+                                    </div>
+                                </div>
+                                @*编码*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Code, new {@class = "control-label col-md-2"})
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Code, new {htmlAttributes = new {@class = "form-control", required = true, maxlength = 100 } })
+                                        @Html.ValidationMessageFor(model => model.Code, "", new {@class = "text-danger"})
+                                    </div>
+                                </div>
+                                @*描述*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Description, new {@class = "control-label col-md-2"})
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Description, new {htmlAttributes = new {@class = "form-control", required = true, maxlength = 50 } })
+                                        @Html.ValidationMessageFor(model => model.Description, "", new {@class = "text-danger"})
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="tab-pane" id="panel_userHaveRoles">
+                        <div id="UserJsTree" style="margin-top: 1em; min-height: 200px;"></div>
+                        <button type="button" id="closeBtn2"  class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" onclick="SaveRoles()" class="btn btn-primary">保存</button>
+                    </div>
+                    <div class="tab-pane" id="panel_userModule">
+                        模块角色
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        UserJsTree();
+    });
+
+    //UserJstree
+    function UserJsTree() {
+        $("#UserJsTree").bind("loaded.jstree", function (e, data) {
+            $("#UserJsTree").jstree("open_all");
+        }).jstree({
+            "core": {
+                 "data":
+                 {
+                     "url": "/Role/UserTreeList",
+                     "dataType": "json"
+                }
+            },
+            "checkbox": {
+                "keep_selected_style": false
+            },
+            "plugins": ["checkbox"]
+        });
+    }
+
+    //保存UserJStree
+    function SaveRoles() {
+        var id = $("#UserJsTree").jstree().get_checked(); //获取所有选中的节点ID
+        alert(id);
+    }
+</script>

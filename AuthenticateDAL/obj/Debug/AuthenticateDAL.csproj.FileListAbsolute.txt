@@ -1,0 +1,13 @@
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\obj\Debug\AuthenticateDAL.csprojResolveAssemblyReference.cache
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\bin\Debug\AuthenticateDAL.dll
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\bin\Debug\AuthenticateDAL.pdb
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\bin\Debug\AuthenticateModel.dll
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\bin\Debug\EntityFramework.dll
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\bin\Debug\EntityFramework.SqlServer.dll
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\bin\Debug\AuthenticateModel.pdb
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\bin\Debug\EntityFramework.xml
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\bin\Debug\EntityFramework.SqlServer.xml
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\bin\Debug\zh-Hans\EntityFramework.resources.dll
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\bin\Debug\zh-Hans\EntityFramework.SqlServer.resources.dll
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\obj\Debug\AuthenticateDAL.dll
+F:\练习\作业\WebAppAuthenticate\AuthenticateDAL\obj\Debug\AuthenticateDAL.pdb

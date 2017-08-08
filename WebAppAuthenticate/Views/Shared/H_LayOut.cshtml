@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@RenderSection("TitleSection")</title>
+    <!--CSS-->
+    <link rel="shortcut icon" href="~/Content/favicon.ico">
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+
+    <link href="~/Content/animate.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min93e3.css" rel="stylesheet" />
+    <link href="~/Content/morris-0.4.3.min.css" rel="stylesheet" />
+    <link href="~/Content/style.min862f.css" rel="stylesheet" />
+    
+    <!--引入的JS-->
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/messages_zh.js"></script>
+
+    <script src="~/Scripts/jquery.metisMenu.js"></script>
+    <script src="~/Scripts/jquery.slimscroll.min.js"></script>
+    <script src="~/Scripts/layer.min.js"></script>
+    <script src="~/Scripts/hplus.min862f.js"></script>
+    <script src="~/Scripts/contabs.min.js"></script>
+    <script src="~/Scripts/pace.min.js"></script>
+    
+
+    @RenderSection("HeaderSection", false)
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden; padding-top: 0px;">
+    <div id="wrapper">
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="nav-close">
+                <i class="fa fa-times-circle"></i>
+            </div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <!--下拉-->
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-home"></i>
+                            <span class="nav-label">权限管理</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                @Html.ActionLink("员工管理", "Index", "UserManage")
+                                @*<a class="J_menuItem" href="`Controller/UserManage/Index.cs" data-index="0">用户管理</a>*@
+                            </li>
+                            <li>
+                                @Html.ActionLink("数据字典管理", "Index", "Dictionary")
+                                @*<a class="J_menuItem" href="#">主页示例二</a>*@
+                            </li>
+                            <li>
+                                @Html.ActionLink("角色管理", "Index", "Role")
+                                @*<a class="J_menuItem" href="#">主页示例三</a>*@
+                            </li>
+                            <li>
+                                @Html.ActionLink("模块管理", "Index", "Module")
+                                @*<a class="J_menuItem" href="#">主页示例四</a>*@
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="glyphicon glyphicon-chevron-left"></i> </a>
+                        <!--<form role="search" class="navbar-form-custom" method="post" action="http://www.zi-han.net/theme/hplus/search_results.html">
+                            <div class="form-group">
+                                <input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">
+                            </div>
+                        </form>-->
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li class="dropdown hidden-xs">
+                            <a class="right-sidebar-toggle" aria-expanded="false">
+                                <i class="fa fa-tasks"></i> 主题
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!--body-->
+            <div class="row J_mainContent" id="content-main">
+               @RenderBody();
+            </div>
+            <!--footer-->
+            <div class="footer">
+                <div class="pull-right">
+                    &copy; 2014-2015 <a href="http://www.zi-han.net/" target="_blank">zihan's blog</a>
+                </div>
+            </div>
+        </div>
+        <!--右侧部分结束-->
+    </div>
+</body>
+</html>

@@ -1,0 +1,5 @@
+F:\练习\作业\WebAppAuthenticate\AuthenticateModel\bin\Debug\AuthenticateModel.dll
+F:\练习\作业\WebAppAuthenticate\AuthenticateModel\bin\Debug\AuthenticateModel.pdb
+F:\练习\作业\WebAppAuthenticate\AuthenticateModel\obj\Debug\AuthenticateModel.csprojResolveAssemblyReference.cache
+F:\练习\作业\WebAppAuthenticate\AuthenticateModel\obj\Debug\AuthenticateModel.dll
+F:\练习\作业\WebAppAuthenticate\AuthenticateModel\obj\Debug\AuthenticateModel.pdb

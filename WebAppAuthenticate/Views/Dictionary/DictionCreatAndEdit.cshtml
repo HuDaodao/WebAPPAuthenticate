@@ -1,0 +1,104 @@
+﻿@model WebAppAuthenticate.ViewModels.DictionaryFormViewModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel">
+                数据字典项管理
+            </h4>
+        </div>
+        <div class="modal-body">
+            @using (Html.BeginForm("Save", "Dictionary", FormMethod.Post, new {id = "DicForm"}))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <hr/>
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.MainDictionaryId)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ChineseName, new {@class = "control-label col-md-2"})
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.ChineseName, new {htmlAttributes = new {@class = "form-control", required = true, maxlength = 50}})
+                            @Html.ValidationMessageFor(model => model.ChineseName, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.EnglishName, new {@class = "control-label col-md-2"})
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.EnglishName, new {htmlAttributes = new {@class = "form-control", required = true, maxlength = 50}})
+                            @Html.ValidationMessageFor(model => model.EnglishName, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Description, new {@class = "control-label col-md-2"})
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Description, new {htmlAttributes = new {@class = "form-control"}})
+                            @Html.ValidationMessageFor(model => model.Description, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Order, new {@class = "control-label col-md-2"})
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Order, new {htmlAttributes = new {@class = "form-control", required = true}})
+                            @Html.ValidationMessageFor(model => model.Order, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Status, new {@class = "control-label col-md-2"})
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.DropDownList("Status", new List<SelectListItem>
+                                {
+                                    new SelectListItem {Text = "是", Value = "true", Selected = true},
+                                    new SelectListItem {Text = "否", Value = "false", Selected = false}
+                                }, new {@class = "form-control", onselect = true})
+                                @Html.ValidationMessageFor(model => model.Status, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-10">
+                            @Model.Error
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-10">
+                            <button type="button" id="closeDicBtn" class="btn btn-info" data-dismiss="modal">关闭</button>
+                            <input type="submit" value="保存" class="btn btn-primary"/>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#DicForm").submit(function(e) {
+        e.preventDefault();
+        var data = $("#DicForm").serialize();
+        var mainId=$("#MainDictionaryId").val();
+        $.ajax({
+            url: "/Dictionary/Save",
+            type: "post",
+            datatype: "json",
+            data: data,
+            success:function(result) {
+                if (result !== "access") {
+                    alert(result);
+                } else {
+                    $("#closeDicBtn").click();
+                    DictionDataTable(mainId);
+                }
+            }
+        });
+    });
+</script>

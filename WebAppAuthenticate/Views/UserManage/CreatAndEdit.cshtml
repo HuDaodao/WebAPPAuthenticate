@@ -1,0 +1,158 @@
+﻿@using WebAppAuthenticate.ViewModels
+@model WebAppAuthenticate.ViewModels.UserFormViewModel
+
+@*<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>*@
+    
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel">
+                用户信息
+            </h4>
+        </div>
+        <div class="modal-body">
+            <div class="tabbable" id="tabs">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#panel_userBaseMsg" data-toggle="tab">用户基本信息管理</a>
+                    </li>
+                    <li>
+                        <a href="#panel_userHaveRoles" data-toggle="tab">用户角色分配</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="panel_userBaseMsg">
+                        @using (Html.BeginForm("Save", "UserManage", FormMethod.Post,new{id="userForm"}))
+                        {
+                            <div class="form-horizontal">
+                                @Html.HiddenFor(mode=>Model.Id)
+                                @*用户名*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.UserName, new {@class = "control-label col-md-2"})
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.UserName, new {htmlAttributes = new {@class = "form-control", required = true,maxlength = 50 } })
+                                        @Html.ValidationMessageFor(model => model.UserName, "", new {@class = "text-danger"})
+                                    </div>
+                                </div>
+                                @*密码*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.PassWord, new {@class = "control-label col-md-2"})
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.PassWord, new {htmlAttributes = new {@class = "form-control", required = true, maxlength = 100 } })
+                                        @Html.ValidationMessageFor(model => model.PassWord, "", new {@class = "text-danger"})
+                                    </div>
+                                </div>
+                                @*真名*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.RealName, new {@class = "control-label col-md-2"})
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.RealName, new {htmlAttributes = new {@class = "form-control", required = true, maxlength = 50 } })
+                                        @Html.ValidationMessageFor(model => model.RealName, "", new {@class = "text-danger"})
+                                    </div>
+                                </div>
+                                @*性别*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Sex, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("Sex", new List<SelectListItem>
+                                        {
+                                            new SelectListItem {Text = "女", Value = "false", Selected = false},
+                                            new SelectListItem {Text = "男", Value = "true", Selected = false}
+                                        }, new { @class = "form-control", onselect = "false" })
+                                    </div>
+                                </div>
+                                @*手机*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MobilePhone, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.MobilePhone, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 50 } })
+                                        @Html.ValidationMessageFor(model => model.MobilePhone, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                @*办公电话*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Phone, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control",maxlength=30 } })
+                                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                @*年龄*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Age, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @class = "form-control",max=120 } })
+                                        @Html.ValidationMessageFor(model => model.Age, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                @*邮箱*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Email, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", required = true, type = "email", maxlength = 200 } })
+                                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                @*是否启用*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Status , new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("Status", new List<SelectListItem>
+                                        {
+                                            new SelectListItem {Text = "否", Value = "false", Selected = false},
+                                            new SelectListItem {Text = "是", Value = "true", Selected = true}
+                                        }, new { @class = "form-control", onselect=true })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-5 col-md-10">
+                                        <button type="button" id="closeBtn1"  class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        <button type="submit" onclick="SaveUser()" class="btn btn-primary">保存</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="tab-pane" id="panel_userHaveRoles">
+                        <div id="UserRoleJsTree" style="margin-top: 1em; min-height: 200px;"></div>
+                        <button type="button" id="closeBtn2"  class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" onclick="SaveRoles()" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        RoleJsTree();
+    });
+    //jstree
+    function RoleJsTree() {
+        $("#UserRoleJsTree").bind("loaded.jstree", function (e, data) {
+            $("#UserRoleJsTree").jstree("open_all"); 
+        }).jstree({
+            "core": {
+                 "data":
+                 {
+                     "url": "/UserManage/RoleTreeList",
+                     "dataType": "json"
+                }
+            },
+            "checkbox": {
+                "keep_selected_style": false
+            },
+            "plugins": ["checkbox"]
+        });
+    }
+
+    //保存JStree
+    function SaveRoles() {
+        var id = $('#UserRoleJsTree').jstree().get_checked(); //获取所有选中的节点ID
+        alert(id);
+    }
+</script>
