@@ -14,82 +14,48 @@
     <link href="~/Content/jquery.dataTables.css" rel="stylesheet"/>
     <link href="~/Content/dataTables.bootstrap.css" rel="stylesheet"/>
     <script src="~/Scripts/jquery.dataTables.js"></script>
-    <link href="~/Content/style.min.css" rel="stylesheet" />
-    
+    <link href="~/Content/style.min.css" rel="stylesheet"/>
+
     <script src="~/Scripts/jstree.min.js"></script>
-    
+    <div id="JsTree"></div>
 
     <script type="text/javascript">
         $(document).ready(function() {
             DataTable(null, null);
+
+            $("#JsTree").bind("loaded.jstree",
+                function(e, data) {
+                    $("#JsTree").jstree("open_all");
+                }).jstree({
+                "core": {
+                    "data": [
+                        {
+                            "text": "Root node",
+                            "children": [
+                                { "text": "Child node 1", "id": 1},
+                                { "text": "Child node 2" }
+                            ]
+                        }
+                    ]
+                    // "data":
+                    // {
+                    //     "url": "/UserManage/RoleTreeList",
+                    //     "dataType": "json"
+                    //}
+                },
+                "checkbox": {
+                    "keep_selected_style": true
+                },
+                "plugins": ["checkbox"]
+                });
         });
 
-        function SaveUser() {
-            $("#userForm").submit(function (e) {
-                e.preventDefault();
-                if (NameValid().form()) {
-                    var data = $("#userForm").serialize();
-                    $.ajax({
-                        url: "/UserManage/Save",
-                        type: "post",
-                        datatype: "json",
-                        async: false,
-                        data: data,
-                        success: function (result) {
-                            if (result !== "access") {
-                                alert(result);
-                            } else {
-                                $("#closeBtn1").click();
-                                DataTable(null, null);
-                            }
-                        },
-                    });
-                }
-                else {
-                    return;
-                }
-            });
-        }
-
-        //验证重名
-        function NameValid() {
-            return $("#userForm").validate({
-                rules: {
-                    UserName: {
-                        remote: {
-                            cache: false,
-                            async: false,
-                            url: "/UserManage/CheckUserName",
-                            type: "post",
-                            datatype: "json",
-                            data: {
-                                userName: function () {
-                                    return $("#UserName").val();
-                                },
-                                id: function () {
-                                    return $("#Id").val();
-                                }
-                            },
-                            //dataFilter: function (data, type) { return data.result; }
-                        }
-                    }
-                },
-                messages: {
-                    UserName: {
-                        remote: "这个名字已经有人用过了"
-                    }
-                }
-            });
-        }
-
-
-        //DataTable
         function DataTable(userName, realName) {
             $("#dataTable").DataTable({
-                "bPaginate": true, 
+                "bPaginate": true,
                 "bSort": true,
                 "bAutoWidth": true,
-                "searching": false, 
+                "searching": false,
                 "columns": [
                     { "data": "UserName" },
                     { "data": "RealName" },
@@ -103,7 +69,11 @@
                         "targets": [6],
                         "data": "Id",
                         "render": function(data, type, full) {
-                            return '<a class="edit" data-toggle="modal" onclick="EditUser(' + data + ')"><i class="glyphicon glyphicon-pencil"></i></a> | <a class="delete" href="javascript:void(0);" onclick="DeleteFunc(' + data + ')"><i class="glyphicon glyphicon-remove"></i></a>';
+                            return '<a class="edit" data-toggle="modal" onclick="EditUser(' +
+                                data +
+                                ')"><i class="glyphicon glyphicon-pencil"></i></a> | <a class="delete" href="javascript:void(0);" onclick="DeleteFunc(' +
+                                data +
+                                ')"><i class="glyphicon glyphicon-remove"></i></a>';
                         }
                     },
                     {
@@ -112,9 +82,9 @@
                     }
                 ],
                 "destroy": true,
-                "bProcessing": false, 
-                "bServerSide": true, 
-                "sAjaxSource": "/UserManage/DataList", 
+                "bProcessing": false,
+                "bServerSide": true,
+                "sAjaxSource": "/UserManage/DataList",
                 "sDom": "Tflt<'row DTTTFooter'<'col-sm-6'i><'col-sm-6'p>>",
                 "fnServerData": function(sSource, aoData, fnCallback) {
                     var data = {};
@@ -149,7 +119,7 @@
                             }
                         });
                 },
-                oLanguage: { 
+                oLanguage: {
                     "sProcessing": "正在加载中......",
                     "sLengthMenu": "每页显示 _MENU_ 条记录",
                     "sZeroRecords": "未查到数据！",

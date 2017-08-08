@@ -1,0 +1,132 @@
+﻿@model WebAppAuthenticate.ViewModels.ModuleFormViewModel
+
+
+@using (Html.BeginForm("Save","Module",FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ChineseName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ChineseName, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 50 } })
+                @Html.ValidationMessageFor(model => model.ChineseName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EnglishName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EnglishName, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 50 } })
+                @Html.ValidationMessageFor(model => model.EnglishName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Url, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" }, maxlength = 100 })
+                @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Icon, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Icon, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 100 } })
+                @Html.ValidationMessageFor(model => model.Icon, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Order, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control", required = true } })
+                @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Status, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Status)
+                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsDisplay, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.IsDisplay)
+                    @Html.ValidationMessageFor(model => model.IsDisplay, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NavigatePicture, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NavigatePicture, new { htmlAttributes = new { @class = "form-control", maxlength = 300 } })
+                @Html.ValidationMessageFor(model => model.NavigatePicture, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-lg-offset-3">
+               @Model.Error
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-10">
+                <input type="submit" value="保存" onclick="SaveModule()" class="btn btn-primary" />
+                <input type="button" value="清空" onclick="CleanAll();" class="btn btn-primary" />
+            </div>      
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function SaveModule() {
+        $("Form").submit(function(e) {
+            e.preventDefault();
+            var data = $("Form").serialize();
+            $.ajax({
+                url: "/Module/Save",
+                datatype: "json",
+                type: "post",
+                data: data,
+                success:function(data) {
+                    if (data === "access") {
+                        alert("保存成功！");
+                        $(".moduleTree").jstree(true).refresh();
+                    } else {
+                        alert(data);
+                    }
+                }
+            });
+        });
+    }
+
+    function CleanAll() {
+        alert("clear");
+        $("input[type=text]").val("");
+        $("input[type=number]").val(0);
+        $("input[type=checkbox]").removeAttr("checked");
+        $("#moduleId").val("");
+    }
+</script>

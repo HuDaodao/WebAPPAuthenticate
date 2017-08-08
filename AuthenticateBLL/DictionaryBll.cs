@@ -38,7 +38,6 @@ namespace AuthenticateBLL
                 {
                     MainDictionary mainDiction = new MainDictionary();
                     mainDiction = db.MainDictionary.Where(m => m.Id == mainDic.Id).FirstOrDefault();
-                    mainDiction.Id = mainDic.Id ;
                     mainDiction.ChineseName = mainDic.ChineseName;
                     mainDiction.Description = mainDic.Description;
                     mainDiction.EnglishName = mainDic.EnglishName;

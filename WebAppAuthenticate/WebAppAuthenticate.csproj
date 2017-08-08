@@ -178,8 +178,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\DictionaryFormViewModel.cs" />
     <Compile Include="ViewModels\DictionTableViewModel.cs" />
-    <Compile Include="ViewModels\RoleJsTree.cs" />
-    <Compile Include="ViewModels\JsTreeModel1.cs" />
+    <Compile Include="ViewModels\ModuleFormViewModel.cs" />
+    <Compile Include="ViewModels\syncJsTree.cs" />
     <Compile Include="ViewModels\MainDictionFormViewModel.cs" />
     <Compile Include="ViewModels\JsTreeModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -266,7 +266,7 @@
     <Content Include="Views\Role\CreatAndEdit.cshtml" />
     <Content Include="Views\Role\Index.cshtml" />
     <Content Include="Views\Module\Index.cshtml" />
-    <Content Include="Views\Module\MainDictionCreatAndEdit.cshtml" />
+    <Content Include="Views\Module\ModuleEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

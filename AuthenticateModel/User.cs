@@ -69,11 +69,6 @@ namespace AuthenticateModel
         public DateTime LastChangeTime { get; set; }
 
         /// <summary>
-        /// 用户角色ID
-        /// </summary>
-        public virtual int? UserRoleId { get; set; }
-
-        /// <summary>
         /// 用户角色集合
         /// </summary>
         public virtual  ICollection<UserRole> UserRole { get; set; }

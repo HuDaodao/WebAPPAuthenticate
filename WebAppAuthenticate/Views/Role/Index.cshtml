@@ -20,12 +20,13 @@
     
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            DataTable(null);
+        $(document).ready(function () {
+            var roleName = $("#RoleName").val();
+            DataTable(roleName);
         });
 
         //保存角色信息
-        function SaveRole() {
+        function SaveRoles() {
             $("#roleForm").submit(function (e) {
                 e.preventDefault();
                 if (NameValid().form()) {
@@ -41,7 +42,7 @@
                                 alert(result);
                             } else {
                                 $("#closeBtn1").click();
-                                DataTable(null, null);
+                                DataTable(null);
                             }
                         }
                     });
@@ -82,7 +83,6 @@
             });
         }
 
-
         //DataTable
         function DataTable(roleName) {
             $("#dataTable").DataTable({
@@ -102,18 +102,18 @@
                         "targets": [5],
                         "data": "Id",
                         "render": function(data, type, full) {
-                            return '<a class="edit"  href="javascript:void(0);" data-toggle="modal" onclick="EditUser(' + data + ')"><i class="glyphicon glyphicon-pencil"></i></a> | <a class="delete" href="javascript:void(0);" onclick="DeleteFunc(' + data + ')"><i class="glyphicon glyphicon-remove"></i></a>';
+                            return '<a class="edit" data-toggle="modal" onclick="EditUser(' + data + ')"><i class="glyphicon glyphicon-pencil"></i></a> | <a class="delete" href="javascript:void(0);" onclick="DeleteFunc(' + data + ')"><i class="glyphicon glyphicon-remove"></i></a>';
                         }
                     },
                     {
-                        "targets": [1, 2, 3],
+                        "targets": [1, 2, 3,4],
                         "bSortable": false
                     }
                 ],
                 "destroy": true,
                 "bProcessing": false, 
                 "bServerSide": true, 
-                "sAjaxSource": "/UserManage/DataList", 
+                "sAjaxSource": "/Role/DataList", 
                 "sDom": "Tflt<'row DTTTFooter'<'col-sm-6'i><'col-sm-6'p>>",
                 "fnServerData": function(sSource, aoData, fnCallback) {
                     var data = {};
@@ -134,7 +134,7 @@
                             data.SortDir = aoData[i].value;
                         }
                     }
-                    data.UserName = roleName,
+                    data.RoleName = roleName,
                         $.ajax({
                             'type': 'post',
                             "url": sSource,
@@ -165,13 +165,13 @@
         }
 
         //查找按钮
-        function SearchUsers() {
+        function SearchRoles() {
             var roleName = $("#RoleName").val();
             DataTable(roleName);
         }
 
         //新增修改
-        function EditUser(id) {
+        function EditRole(id) {
             var loadUrl = "/Role/RoleDetail?id=" + id;
             $("#roleModel").load(loadUrl,
                 function() {
@@ -204,11 +204,11 @@
 <div class="col-md-12">
     <div class="row">
         <div class="col-md-2">
-            <input type="text" class="form-control" id="UserName" maxlength="50" placeholder="角色名"/>
+            <input type="text" class="form-control" id="RoleName" maxlength="50" placeholder="角色名"/>
         </div>
         <div class="col-md-4">
-            <input type="button" value="查询" class="btn btn-primary" onclick="SearchUsers()" />
-            <input type="button" value="新增" class="btn btn-primary" onclick ="EditUser(0)" data-toggle="modal"/>
+            <input type="button" value="查询" class="btn btn-primary" onclick="SearchRole()" />
+            <input type="button" value="新增" class="btn btn-primary" onclick ="EditRole(0)" data-toggle="modal"/>
         </div>
     </div>
     <div class="row" style ="margin: 15px;">
@@ -220,6 +220,7 @@
                 <th>上次修改人</th>
                 <th>上次修改时间</th>
                 <th>描述</th>
+                <th>操作</th>
             </tr>
             <thead>
         </table>

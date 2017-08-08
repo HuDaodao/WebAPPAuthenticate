@@ -39,7 +39,7 @@
                             "url": "/Dictionary/TreeList",
                             "datatype": "json",
                             "data": function(node, callback) {
-                                return { "id": "#" };
+                                return { "id": node.id === "#" ? "0" : node.id };
                             }
                         }
                     },

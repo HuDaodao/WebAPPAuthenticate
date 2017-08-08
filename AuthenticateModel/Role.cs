@@ -45,11 +45,6 @@ namespace AuthenticateModel
         public int? RoleModuleId { get; set; }
 
         /// <summary>
-        /// 用户角色表ID
-        /// </summary>
-        public int? UserRoleId { get; set; }
-
-        /// <summary>
         /// 角色模块集合
         /// </summary>
         public virtual ICollection<RoleModule> RoleModuel { get; set; }

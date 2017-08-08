@@ -55,6 +55,12 @@
                                         @Html.ValidationMessageFor(model => model.Description, "", new {@class = "text-danger"})
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-2">
+                                        <button type="button" id="closeBtn1" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        <button type="submit" onclick="SaveRoles()" class="btn btn-primary">保存</button>
+                                    </div>
+                                </div>
                             </div>
                         }
                     </div>
@@ -62,7 +68,7 @@
                         管理员用户角色选择
                         <div id="UserJsTree" style="margin-top: 1em; min-height: 200px;"></div>
                         <button type="button" id="closeBtn2" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="submit" onclick="SaveRoles()" class="btn btn-primary">保存</button>
+                        <button type="submit" onclick="SaveUserRoles()" class="btn btn-primary">保存</button>
                     </div>
                     <div class="tab-pane" id="panel_userModule">
                         模块角色
@@ -98,9 +104,5 @@
         });
     }
 
-    //保存UserJStree
-    function SaveRoles() {
-        var id = $("#UserJsTree").jstree().get_checked(); //获取所有选中的节点ID
-        alert(id);
-    }
+ 
 </script>

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModuleBll.cs" />
     <Compile Include="DictionaryBll.cs" />
     <Compile Include="LoginBll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

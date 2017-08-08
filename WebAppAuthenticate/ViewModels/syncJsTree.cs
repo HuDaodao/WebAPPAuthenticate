@@ -2,7 +2,7 @@
 
 namespace WebAppAuthenticate.ViewModels
 {
-    public class RoleJsTree
+    public class syncJsTree
     {
         public int id { get; set; }
         /// <summary>
@@ -10,6 +10,6 @@ namespace WebAppAuthenticate.ViewModels
         /// </summary>
         public string text { get; set; }
 
-        public List<RoleJsTree> children { get; set; }
+        public List<syncJsTree> children { get; set; }
     }
 }

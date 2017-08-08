@@ -173,29 +173,29 @@ namespace WebAppAuthenticate.Controllers
             return Json(result);
         }
 
-        ///// <summary>
-        ///// 获取角色jstree数据
-        ///// </summary>
-        ///// <returns>json格式的JStree</returns>
-        //public ActionResult UserTreeList()
-        //{
-        //    RoleBll bll = new RoleBll();
-        //    var roles = bll.GetAllRole();
-        //    RoleJsTree  jst=new RoleJsTree();
-        //    jst.id = 0;
-        //    jst.text = "全选";
-        //    List<RoleJsTree> children = new List<RoleJsTree>();
-        //    foreach (var role in roles)
-        //    {
-        //        RoleJsTree child = new RoleJsTree()
-        //        {
-        //            id = role.Id,
-        //            text = role.RoleName,
-        //        };
-        //        children.Add(child);
-        //    }
-        //    jst.children = children;
-        //    return Json(jst, JsonRequestBehavior.AllowGet);
-        //}
+        /// <summary>
+        /// 获取角色jstree数据
+        /// </summary>
+        /// <returns>json格式的JStree</returns>
+        public ActionResult UserTreeList()
+        {
+            UserBll bll = new UserBll();
+            var roles = bll.GetAllUser();
+            syncJsTree jst = new syncJsTree();
+            jst.id = 0;
+            jst.text = "全选";
+            List<syncJsTree> children = new List<syncJsTree>();
+            foreach (var role in roles)
+            {
+                syncJsTree child = new syncJsTree()
+                {
+                    id = role.Id,
+                    text = role.UserName,
+                };
+                children.Add(child);
+            }
+            jst.children = children;
+            return Json(jst, JsonRequestBehavior.AllowGet);
+        }
     }
 }

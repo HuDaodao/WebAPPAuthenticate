@@ -1,6 +1,7 @@
 ﻿using AuthenticateModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -105,6 +106,19 @@ namespace AuthenticateBLL
         }
 
         /// <summary>
+        /// 返回所有的用户
+        /// </summary>
+        /// <returns>用户列表</returns>
+        public List<User> GetAllUser()
+        {
+            using (AuthentContext db = new AuthentContext())
+            {
+                return db.User.ToList();
+            }
+        }
+
+
+        /// <summary>
         /// 删除用户
         /// </summary>
         /// <param name="id">用户ID</param>
@@ -150,6 +164,37 @@ namespace AuthenticateBLL
                     return user.Id == id;
                 }
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// 保存选择的角色
+        /// </summary>
+        /// <param name="roleIds">角色数组</param>
+        /// <param name="userId">用户ID</param>
+        /// <param name="changeUser">修改人ID</param>
+        public void SaveUserRoles(List<int> roleIds,int userId,int changeUser)
+        {
+            using (AuthentContext db = new AuthentContext())
+            {
+                //先要删除这个用户的角色
+                var roles = db.UserRole.Where(ur => ur.UserId == userId && roleIds.Contains(ur.RoleId));
+                db.UserRole.RemoveRange(roles);
+
+                //再重新保存
+                List<UserRole> userRoles=new List<UserRole>();
+                foreach (var roleId in roleIds)
+                {
+                    UserRole ur = new UserRole();
+                    ur.UserId = userId;
+                    ur.RoleId = roleId;
+                    ur.LastChangeTime=DateTime.Now;
+                    ur.LastChangeUser =changeUser;
+                    userRoles.Add(ur);
+                }
+                db.UserRole.AddRange(userRoles);
+
+                db.SaveChanges();
             }
         }
     }

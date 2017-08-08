@@ -21,6 +21,8 @@ namespace AuthenticateDAL
         public DbSet<Dictionary> Dictionary { get; set; }
         public DbSet<MainDictionary> MainDictionary { get; set; }
         public DbSet<Module> Module { get; set; }
+        public DbSet<UserRole> UserRole { get; set; }
+        public DbSet<RoleModule> RoleModule { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

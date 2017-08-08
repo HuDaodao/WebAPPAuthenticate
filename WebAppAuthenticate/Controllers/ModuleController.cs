@@ -11,30 +11,30 @@ using WebAppAuthenticate.Filters;
 
 namespace WebAppAuthenticate.Controllers
 {
+   [HasUserFilter]
     public class ModuleController : Controller
     {
-        [HasUserFilter]
         public ActionResult Index()
         {
             return View();
         }
 
         /// <summary>
-        /// 返回字典JSon数据
+        /// 返回模块JSon数据
         /// </summary>
         /// <param name="id">上级Id</param>
         /// <returns></returns>
         public ActionResult TreeList(string id)
         {
-            DictionaryBll bll=new DictionaryBll();
-            var dictionary = bll.GetAllDiction();
+            ModuleBll bll=new ModuleBll();
+            var modules = bll.GetAllModule();
             List<JsTreeModel>jsTrees=new List<JsTreeModel>();
-            foreach (var diction in dictionary)
+            foreach (var module in modules)
             {
                 JsTreeModel jsTree=new JsTreeModel();
-                jsTree.id = diction.Id;
+                jsTree.id = module.Id;
                 jsTree.children = false;
-                jsTree.text = diction.ChineseName;
+                jsTree.text = module.ChineseName;
                 jsTree.parent = "#";
                 jsTrees.Add(jsTree);
             }
@@ -42,75 +42,86 @@ namespace WebAppAuthenticate.Controllers
         }
 
         /// <summary>
-        /// 数据字典主表的编辑
+        /// 模块的编辑
         /// </summary>
-        /// <param name="id">数据字典主键</param>
+        /// <param name="id">模块主键</param>
         /// <returns>编辑部分视图</returns>
-        public ActionResult MainDictionDetail(int id = 0)
+        public ActionResult ModuleDetail(int id = 0)
         {
-            MainDictionFormViewModel mainDictionForm = new MainDictionFormViewModel();
+            ModuleFormViewModel moduleForm = new ModuleFormViewModel();
             if (id != 0)
             {
-                DictionaryBll bll = new DictionaryBll();
-                MainDictionary mainDic =  bll.GetMainDictioById(id);
-                if (mainDic != null)
+                ModuleBll bll = new ModuleBll();
+                Module module =  bll.GetModuleById(id);
+                if (module != null)
                 {
-                    mainDictionForm.Id = mainDic.Id;
-                    mainDictionForm.ChineseName = mainDic.ChineseName;
-                    mainDictionForm.EnglishName = mainDic.EnglishName;
-                    mainDictionForm.Description = mainDic.Description;
-                    mainDictionForm.ReadOnly = mainDic.ReadOnly;
+                    moduleForm.Id = module.Id;
+                    moduleForm.ChineseName = module.ChineseName;
+                    moduleForm.EnglishName = module.EnglishName;
+                    moduleForm.Url = module.Url;
+                    moduleForm.Icon = module.Icon;
+                    moduleForm.Order = module.Order;
+                    moduleForm.Status = module.Status;
+                    moduleForm.IsDisplay = module.IsDisplay;
+                    moduleForm.NavigatePicture = module.NavigatePicture;
+                    moduleForm.Description = module.Description;
                 }
                 else
                 {
-                    return PartialView("MainDictionCreatAndEdit", mainDictionForm);
+                    return PartialView("ModuleEdit", moduleForm);
                 }
             }
-            return PartialView("MainDictionCreatAndEdit", mainDictionForm);
+            return PartialView("ModuleEdit", moduleForm);
         }
 
         /// <summary>
-        /// 保存数据字典主表
+        /// 保存模块
         /// </summary>
-        /// <param name="dictionView"></param>
-        /// <returns></returns>
-        public ActionResult SaveMain(MainDictionFormViewModel dictionView)
+        /// <param name="moduleView">模块实体视图模型</param>
+        /// <returns>保存结果</returns>
+        public ActionResult Save(ModuleFormViewModel moduleView)
         {
             if (ModelState.IsValid)
             {
-                MainDictionary mainDictionary = new MainDictionary();
-                mainDictionary.Id = dictionView.Id ?? 0;
-                mainDictionary.ChineseName = dictionView.ChineseName;
-                mainDictionary.Description = dictionView.Description;
-                mainDictionary.EnglishName = dictionView.EnglishName;
-                mainDictionary.LastChangeTime = DateTime.Now;
-                mainDictionary.LastChangeUser = int.Parse(Session["UserId"].ToString());
-                mainDictionary.ReadOnly = dictionView.ReadOnly;
-                DictionaryBll bll = new DictionaryBll();
+                Module module = new Module();
+                module.Id = moduleView.Id ?? 0;
+                module.ChineseName = moduleView.ChineseName;
+                module.Description = moduleView.Description;
+                module.EnglishName = moduleView.EnglishName;
+                module.LastChangeTime = DateTime.Now;
+                module.LastChangeUser = int.Parse(Session["UserId"].ToString());
+                module.Url = moduleView.Url;
+                module.Icon = moduleView.Icon;
+                module.Order = moduleView.Order;
+                module.Status = moduleView.Status;
+                module.IsDisplay = moduleView.IsDisplay;
+                module.NavigatePicture = moduleView.NavigatePicture;
+
+                ModuleBll bll = new ModuleBll();
                 try
                 {
-                    bll.SaveMainDiction(mainDictionary);
+                    bll.SaveModule(module);
                 }
                 catch (Exception e)
                 {
-                    dictionView.Error = "保存出错,请重试";
-                    return Json(dictionView.Error, JsonRequestBehavior.AllowGet);
+                    moduleView.Error= "保存出错,请重试";
+                    return Json(moduleView.Error,JsonRequestBehavior.AllowGet);
                 }
                 return Json("access", JsonRequestBehavior.AllowGet);
             }
             else
             {
-                dictionView.Error = "模型验证未通过";
-                return Json(dictionView.Error, JsonRequestBehavior.AllowGet);
+                moduleView.Error = "模型验证未通过";
+                return Json(moduleView .Error, JsonRequestBehavior.AllowGet);
             }
         }
 
         /// <summary>
-        /// 删除数据字典主表
+        /// 删除模块
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ActionResult DeleteMain(int? id)
+        /// <param name="id">模块ID</param>
+        /// <returns>删除结果</returns>
+        public ActionResult Delete(int? id)
         {
             string result = "ok";
             if (string.IsNullOrEmpty(id.ToString()))
@@ -119,7 +130,7 @@ namespace WebAppAuthenticate.Controllers
             }
             else
             {
-                DictionaryBll bll = new DictionaryBll();
+                ModuleBll bll = new ModuleBll();
                 try
                 {
                     bll.DeleteMain(int.Parse(id.ToString()));

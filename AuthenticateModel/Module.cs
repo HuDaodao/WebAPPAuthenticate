@@ -64,11 +64,6 @@ namespace AuthenticateModel
         public string NavigatePicture { get; set; }
 
         /// <summary>
-        /// 编码
-        /// </summary>
-        public string Code { get; set; }
-
-        /// <summary>
         /// 上次修改人
         /// </summary>
         public int LastChangeUser { get; set; }
@@ -77,11 +72,6 @@ namespace AuthenticateModel
         /// 上次修改时间
         /// </summary>
         public DateTime LastChangeTime { get; set; }
-
-        /// <summary>
-        /// 角色模块表ID
-        /// </summary>
-        public virtual int? RoleModuleId { get; set; }
 
         /// <summary>
         /// 角色模块集合

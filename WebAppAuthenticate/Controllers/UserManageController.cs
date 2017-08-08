@@ -96,7 +96,6 @@ namespace WebAppAuthenticate.Controllers
                     userForm.PassWord = pass;
                     userForm.RealName = user.RealName;
                     userForm.MobilePhone = user.MobilePhone;
-                    userForm.UserRoleId = user.UserRoleId;
                 }
                 else
                 {
@@ -198,13 +197,13 @@ namespace WebAppAuthenticate.Controllers
         {
             RoleBll bll = new RoleBll();
             var roles = bll.GetAllRole();
-            RoleJsTree  jst=new RoleJsTree();
+            syncJsTree  jst=new syncJsTree();
             jst.id = 0;
             jst.text = "全选";
-            List<RoleJsTree> children = new List<RoleJsTree>();
+            List<syncJsTree> children = new List<syncJsTree>();
             foreach (var role in roles)
             {
-                RoleJsTree child = new RoleJsTree()
+                syncJsTree child = new syncJsTree()
                 {
                     id = role.Id,
                     text = role.RoleName,
@@ -213,6 +212,38 @@ namespace WebAppAuthenticate.Controllers
             }
             jst.children = children;
             return Json(jst, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        ///保存选择的角色
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SaveChooseRoles(string ids,UserFormViewModel  form, int userId = 0)
+        {
+            if (userId == 0)
+            {
+                return Json("请选择一个用户");
+            }
+            UserBll bll = new UserBll();
+            string[] roleIds = ids.Split(',');
+            List<int> intIds=new List<int>();
+            foreach (var roleId in roleIds)
+            {
+                int intNum;
+                if (int.TryParse(roleId, out intNum))
+                {
+                    intIds.Add(intNum);
+                }
+            }
+            try
+            {
+                bll.SaveUserRoles(intIds, userId, int.Parse(Session["UserId"].ToString()));
+            }
+            catch(Exception e)
+            {
+                return Json("保存出错", JsonRequestBehavior.AllowGet);
+            }
+            return Json("access", JsonRequestBehavior.AllowGet);
         }
     }
 }
