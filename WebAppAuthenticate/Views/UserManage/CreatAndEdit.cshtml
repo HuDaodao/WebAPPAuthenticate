@@ -150,9 +150,19 @@
         });
     }
 
-    //保存JStree
+    //保存所选角色
     function SaveRoles() {
         var id = $('#UserRoleJsTree').jstree().get_checked(); //获取所有选中的节点ID
         alert(id);
+        $.ajax({
+            url: "/Role/Save",
+            datatype: "json",
+            type: "post",
+            data: id,
+            success:function(data) {
+
+
+            }
+        });
     }
 </script>
