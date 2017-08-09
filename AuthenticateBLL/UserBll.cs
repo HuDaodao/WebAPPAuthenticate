@@ -185,16 +185,35 @@ namespace AuthenticateBLL
                 List<UserRole> userRoles=new List<UserRole>();
                 foreach (var roleId in roleIds)
                 {
-                    UserRole ur = new UserRole();
-                    ur.UserId = userId;
-                    ur.RoleId = roleId;
-                    ur.LastChangeTime=DateTime.Now;
-                    ur.LastChangeUser =changeUser;
-                    userRoles.Add(ur);
+                    UserRole userRole = new UserRole();
+                    userRole.UserId = userId;
+                    userRole.RoleId = roleId;
+                    userRole.LastChangeTime=DateTime.Now;
+                    userRole.LastChangeUser =changeUser;
+                    userRoles.Add(userRole);
                 }
                 db.UserRole.AddRange(userRoles);
 
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取一个用户的所有角色Id
+        /// </summary>
+        /// <param name="id">用户ID</param>
+        /// <returns>用户的角色Id列表</returns>
+        public List<int> GetUserRole(int id)
+        {
+            using (AuthentContext db = new AuthentContext())
+            {
+                var userRoles = db.UserRole.Where(ur => ur.UserId == id).ToList();
+                List<int> roles = new List<int>();
+                foreach (var userRole in userRoles)
+                {
+                    roles.Add(userRole.RoleId);
+                }
+                return roles;
             }
         }
     }

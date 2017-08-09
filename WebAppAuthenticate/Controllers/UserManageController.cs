@@ -11,7 +11,7 @@ using WebAppAuthenticate.Filters;
 namespace WebAppAuthenticate.Controllers
 {
     //[HasUserFilter]
-    public class UserManageController : Controller
+    public class UserManageController : CommonController
     {
         /// <summary>
         /// 返回用户管理页面
@@ -192,33 +192,23 @@ namespace WebAppAuthenticate.Controllers
         /// <summary>
         /// 获取角色jstree数据
         /// </summary>
-        /// <returns>json格式的JStree</returns>
-        public ActionResult RoleTreeList()
+        /// <param name="id">用户ID</param>
+        /// <returns>jstree数据</returns>
+        public ActionResult RoleTreeList(int id=0)
         {
-            RoleBll bll = new RoleBll();
-            var roles = bll.GetAllRole();
-            syncJsTree  jst=new syncJsTree();
-            jst.id = 0;
-            jst.text = "全选";
-            List<syncJsTree> children = new List<syncJsTree>();
-            foreach (var role in roles)
-            {
-                syncJsTree child = new syncJsTree()
-                {
-                    id = role.Id,
-                    text = role.RoleName,
-                };
-                children.Add(child);
-            }
-            jst.children = children;
-            return Json(jst, JsonRequestBehavior.AllowGet);
+            UserBll bll = new UserBll();
+            List<int> getRoles = bll.GetUserRole(id);
+            var jsTree = JsTreeRoleWithCheck(getRoles);
+            return Json(jsTree, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
         ///保存选择的角色
         /// </summary>
-        /// <returns></returns>
-        public ActionResult SaveChooseRoles(string ids,UserFormViewModel  form, int userId = 0)
+        /// <param name="ids">角色字符串</param>
+        /// <param name="userId">用户ID</param>
+        /// <returns>保存结果</returns>
+        public ActionResult SaveChooseRoles(string ids,int userId = 0)
         {
             if (userId == 0)
             {

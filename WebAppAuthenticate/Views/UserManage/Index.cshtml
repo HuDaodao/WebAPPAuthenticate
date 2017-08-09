@@ -17,37 +17,10 @@
     <link href="~/Content/style.min.css" rel="stylesheet"/>
 
     <script src="~/Scripts/jstree.min.js"></script>
-    <div id="JsTree"></div>
 
     <script type="text/javascript">
         $(document).ready(function() {
             DataTable(null, null);
-
-            $("#JsTree").bind("loaded.jstree",
-                function(e, data) {
-                    $("#JsTree").jstree("open_all");
-                }).jstree({
-                "core": {
-                    "data": [
-                        {
-                            "text": "Root node",
-                            "children": [
-                                { "text": "Child node 1", "id": 1},
-                                { "text": "Child node 2" }
-                            ]
-                        }
-                    ]
-                    // "data":
-                    // {
-                    //     "url": "/UserManage/RoleTreeList",
-                    //     "dataType": "json"
-                    //}
-                },
-                "checkbox": {
-                    "keep_selected_style": true
-                },
-                "plugins": ["checkbox"]
-                });
         });
 
         function DataTable(userName, realName) {

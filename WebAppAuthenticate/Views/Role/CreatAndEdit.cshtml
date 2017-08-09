@@ -65,10 +65,11 @@
                         }
                     </div>
                     <div class="tab-pane" id="panel_userHaveRoles">
-                        管理员用户角色选择
-                        <div id="UserJsTree" style="margin-top: 1em; min-height: 200px;"></div>
-                        <button type="button" id="closeBtn2" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="submit" onclick="SaveUserRoles()" class="btn btn-primary">保存</button>
+                        <div class="col-md-offset-2">
+                            <div id="UserJsTree" style="margin-top: 1em; min-height: 200px;"></div>
+                            <button type="button" id="closeBtn2" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" onclick="SaveRoleUsers()" class="btn btn-primary">保存</button>
+                        </div>
                     </div>
                     <div class="tab-pane" id="panel_userModule">
                         模块角色
@@ -82,18 +83,18 @@
 
 <script type="text/javascript">
     $(function () {
-        UserJsTree();
+        UserJsTree($("#Id").val());
     });
 
-    //UserJstree
-    function UserJsTree() {
+    //加载UserJstree
+    function UserJsTree(id) {
         $("#UserJsTree").bind("loaded.jstree", function (e, data) {
             $("#UserJsTree").jstree("open_all");
         }).jstree({
             "core": {
                  "data":
                  {
-                     "url": "/Role/UserTreeList",
+                     "url": "/Role/UserTreeList?id="+id,
                      "dataType": "json"
                 }
             },
@@ -104,5 +105,29 @@
         });
     }
 
- 
+    //保存所选用户
+    function SaveRoleUsers() {
+        var roleId = $("#Id").val();
+        if (roleId === "0" || roleId === "" || roleId===null) {
+            alert("请选择一个角色");
+            return;
+        }
+        var ids = $('#UserJsTree').jstree().get_checked(); //获取所有选中的节点ID
+        $.ajax({
+            url: "/Role/SaveChooseUsers",
+            datatype: "json",
+            type: "post",
+            data: {
+                ids: ids.toString(),
+                roleId: roleId
+            },
+            success:function(data) {
+                if (data !== "access") {
+                    alert(data);
+                } else {
+                    alert("保存成功！");
+                }
+            }
+        });
+    }
 </script>

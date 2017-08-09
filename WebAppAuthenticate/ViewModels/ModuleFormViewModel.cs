@@ -11,6 +11,8 @@ namespace WebAppAuthenticate.ViewModels
     {
         public int? Id { get; set; }
 
+        public int? ParentId { get; set; }
+
         [Required(ErrorMessage = "中文名必填")]
         [MaxLength(50, ErrorMessage = "不得超过50个字")]
         [DisplayName("中文名")]

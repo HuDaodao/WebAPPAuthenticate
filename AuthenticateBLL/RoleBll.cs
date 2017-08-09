@@ -23,6 +23,25 @@ namespace AuthenticateBLL
         }
 
         /// <summary>
+        /// 获取一个角色的所有用户Id
+        /// </summary>
+        /// <param name="id">角色ID</param>
+        /// <returns>角色的用户Id列表</returns>
+        public List<int> GetRoleUser(int id)
+        {
+            using (AuthentContext db = new AuthentContext())
+            {
+                var roleUsers = db.UserRole.Where(ur => ur.RoleId == id).ToList();
+                List<int> users = new List<int>();
+                foreach (var roleUser in roleUsers)
+                {
+                    users.Add(roleUser.UserId);
+                }
+                return users;
+            }
+        }
+
+        /// <summary>
         /// 分页获取角色列表
         /// </summary>
         /// <param name="name">角色名</param>
@@ -111,6 +130,37 @@ namespace AuthenticateBLL
                     db.Role.Remove(role);
                     db.SaveChanges();
                 }
+            }
+        }
+
+        /// <summary>
+        /// 保存选择的用户
+        /// </summary>
+        /// <param name="userIds">用户Id数组</param>
+        /// <param name="roleId">角色ID</param>
+        /// <param name="changeUser">修改人ID</param>
+        public void SaveRoleUsers(List<int> userIds, int roleId, int changeUser)
+        {
+            using (AuthentContext db = new AuthentContext())
+            {
+                //先要删除这个角色的用户
+                var users = db.UserRole.Where(ur => ur.RoleId == roleId && userIds.Contains(ur.UserId));
+                db.UserRole.RemoveRange(users);
+
+                //再重新保存
+                List<UserRole> roleUsers = new List<UserRole>();
+                foreach (var userId in userIds)
+                {
+                    UserRole userRole = new UserRole();
+                    userRole.UserId = userId;
+                    userRole.RoleId = roleId;
+                    userRole.LastChangeTime = DateTime.Now;
+                    userRole.LastChangeUser = changeUser;
+                    roleUsers.Add(userRole);
+                }
+                db.UserRole.AddRange(roleUsers);
+
+                db.SaveChanges();
             }
         }
 

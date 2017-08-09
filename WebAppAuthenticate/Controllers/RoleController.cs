@@ -10,7 +10,7 @@ using WebAppAuthenticate.ViewModels;
 namespace WebAppAuthenticate.Controllers
 {
     //[HasUserFilter]
-    public class RoleController : Controller
+    public class RoleController : CommonController
     {
         /// <summary>
         /// 返回角色管理页面
@@ -174,28 +174,48 @@ namespace WebAppAuthenticate.Controllers
         }
 
         /// <summary>
-        /// 获取角色jstree数据
+        /// 获取用户jsTree数据
         /// </summary>
+        /// <param name="id">用户ID</param>
         /// <returns>json格式的JStree</returns>
-        public ActionResult UserTreeList()
+        public ActionResult UserTreeList(int id=0)
         {
-            UserBll bll = new UserBll();
-            var roles = bll.GetAllUser();
-            syncJsTree jst = new syncJsTree();
-            jst.id = 0;
-            jst.text = "全选";
-            List<syncJsTree> children = new List<syncJsTree>();
-            foreach (var role in roles)
+            RoleBll bll = new RoleBll();
+            var roles = bll.GetRoleUser(id);
+            var jsTree = JsTreeUserWithCheck(roles);
+            return Json(jsTree, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        ///保存选择的用户
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SaveChooseUsers(string ids, int roleId = 0)
+        {
+            if (roleId == 0)
             {
-                syncJsTree child = new syncJsTree()
-                {
-                    id = role.Id,
-                    text = role.UserName,
-                };
-                children.Add(child);
+                return Json("请选择一个角色");
             }
-            jst.children = children;
-            return Json(jst, JsonRequestBehavior.AllowGet);
+            RoleBll bll = new RoleBll();
+            string[] userIds = ids.Split(',');
+            List<int> intIds = new List<int>();
+            foreach (var userId in userIds)
+            {
+                int intNum;
+                if (int.TryParse(userId, out intNum))
+                {
+                    intIds.Add(intNum);
+                }
+            }
+            try
+            {
+                bll.SaveRoleUsers(intIds, roleId, int.Parse(Session["UserId"].ToString()));
+            }
+            catch (Exception e)
+            {
+                return Json("保存出错", JsonRequestBehavior.AllowGet);
+            }
+            return Json("access", JsonRequestBehavior.AllowGet);
         }
     }
 }

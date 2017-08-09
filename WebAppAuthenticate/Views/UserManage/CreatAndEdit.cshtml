@@ -129,7 +129,7 @@
 
 <script type="text/javascript">
     $(function () {
-        RoleJsTree();
+        RoleJsTree($("#Id").val());
     });
 
     //保存用户基本信息
@@ -191,23 +191,20 @@
     }
 
 
-    //角色分配jstree
-    function RoleJsTree() {
+    //加载角色jstree
+    function RoleJsTree(id) {
         $("#UserRoleJsTree").bind("loaded.jstree", function (e, data) {
             $("#UserRoleJsTree").jstree("open_all"); 
         }).jstree({
             "core": {
-                "data":[
-                    { "text" : "Root node", "children" : [
-                        { "text" : "Child node 1", "id" : 1,"checked":true},
-                        { "text" : "Child node 2" }
-                    ]}
-                ]
-                // "data":
-                // {
-                //     "url": "/UserManage/RoleTreeList",
-                //     "dataType": "json"
-                //}
+                "data":
+                {
+                    "url": "/UserManage/RoleTreeList?id="+id,
+                    "dataType": "json"
+                    //"success":function(data) {
+                    //    alert(JSON.stringify(data));
+                    //}
+                 }
             },
             "checkbox": {
                 "keep_selected_style": false
@@ -218,16 +215,17 @@
 
     //保存所选角色
     function SaveRoles() {
-        var ids = $('#UserRoleJsTree').jstree().get_checked(); //获取所有选中的节点ID
-        alert(ids.toString());
         var userId = $("#Id").val();
-        alert(userId);
+        if (userId === "0"||userId===""||userId===null) {
+            alert("请选择一个用户");
+            return;
+        }
+        var ids = $('#UserRoleJsTree').jstree().get_checked(); //获取所有选中的节点ID
         $.ajax({
             url: "/UserManage/SaveChooseRoles",
             datatype: "json",
             type: "post",
             data: {
-                form: $("#userForm").serialize(),
                 ids: ids.toString(),
                 userId: userId
             },

@@ -4,6 +4,7 @@ using System.Linq;
 
 using AuthenticateDAL;
 using AuthenticateModel;
+using System;
 
 namespace AuthenticateBLL
 {
@@ -18,6 +19,19 @@ namespace AuthenticateBLL
             using (AuthentContext db = new AuthentContext())
             {
                 return db.Module.ToList();
+            }
+        }
+
+        /// <summary>
+        /// 返回子模块
+        /// </summary>
+        /// <param name="parentId">模块父ID</param>
+        /// <returns>模块列表</returns>
+        public List<Module> GetSonModule(int parentId)
+        {
+            using (AuthentContext db = new AuthentContext())
+            {
+                return db.Module.Where(m=>m.ParentId==parentId).ToList();
             }
         }
 
@@ -83,5 +97,60 @@ namespace AuthenticateBLL
                 db.SaveChanges();
             }
         }
+
+        /// <summary>
+        /// 保存选择的角色
+        /// </summary>
+        /// <param name="roleIds">角色数组</param>
+        /// <param name="moduleId">当前模块ID</param>
+        /// <param name="changeUser">修改人ID</param>
+        public void SaveModuleRoles(List<int> roleIds, int moduleId, int changeUser)
+        {
+            using (AuthentContext db = new AuthentContext())
+            {
+                //先要删除这个模块的角色
+                var roles = db.RoleModule.Where(rm => rm.ModuleId == moduleId && roleIds.Contains(rm.RoleId));
+                db.RoleModule.RemoveRange(roles);
+
+                ////判断他是不是子模块
+                //Module currentModule = db.Module.Where(module => module.Id == moduleId).FirstOrDefault();
+                //var a = currentModule.ParentId;
+
+                //再重新保存
+                List<RoleModule> roleModels = new List<RoleModule>();
+                foreach (var roleId in roleIds)
+                {
+                    RoleModule roleModel = new RoleModule();
+                    roleModel.ModuleId = moduleId;
+                    roleModel.RoleId = roleId;
+                    roleModel.LastChangeTime = DateTime.Now;
+                    roleModel.LastChangeUser = changeUser;
+                    roleModels.Add(roleModel);
+                }
+                db.RoleModule.AddRange(roleModels);
+
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取一个模块的所有角色Id
+        /// </summary>
+        /// <param name="id">模块ID</param>
+        /// <returns>模块角色Id列表</returns>
+        public List<int> GetModuleRole(int id)
+        {
+            using (AuthentContext db = new AuthentContext())
+            {
+                var moduleRoles = db.RoleModule.Where(ur => ur.ModuleId == id).ToList();
+                List<int> roles = new List<int>();
+                foreach (var moduleRole in moduleRoles)
+                {
+                    roles.Add(moduleRole.RoleId);
+                }
+                return roles;
+            }
+        }
+
     }
 }

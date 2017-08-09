@@ -102,7 +102,7 @@
                         "targets": [5],
                         "data": "Id",
                         "render": function(data, type, full) {
-                            return '<a class="edit" data-toggle="modal" onclick="EditUser(' + data + ')"><i class="glyphicon glyphicon-pencil"></i></a> | <a class="delete" href="javascript:void(0);" onclick="DeleteFunc(' + data + ')"><i class="glyphicon glyphicon-remove"></i></a>';
+                            return '<a class="edit" data-toggle="modal" onclick="EditRole(' + data + ')"><i class="glyphicon glyphicon-pencil"></i></a> | <a class="delete" href="javascript:void(0);" onclick="DeleteFunc(' + data + ')"><i class="glyphicon glyphicon-remove"></i></a>';
                         }
                     },
                     {
@@ -207,7 +207,7 @@
             <input type="text" class="form-control" id="RoleName" maxlength="50" placeholder="角色名"/>
         </div>
         <div class="col-md-4">
-            <input type="button" value="查询" class="btn btn-primary" onclick="SearchRole()" />
+            <input type="button" value="查询" class="btn btn-primary" onclick="SearchRoles()" />
             <input type="button" value="新增" class="btn btn-primary" onclick ="EditRole(0)" data-toggle="modal"/>
         </div>
     </div>
