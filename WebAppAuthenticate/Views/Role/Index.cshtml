@@ -27,30 +27,27 @@
 
         //保存角色信息
         function SaveRoles() {
-            $("#roleForm").submit(function (e) {
-                e.preventDefault();
-                if (NameValid().form()) {
-                    var data = $("#roleForm").serialize();
-                    $.ajax({
-                        url: "/Role/Save",
-                        type: "post",
-                        datatype: "json",
-                        async: false,
-                        data: data,
-                        success: function (result) {
-                            if (result !== "access") {
-                                alert(result);
-                            } else {
-                                $("#closeBaseBtn").click();
-                                DataTable(null);
-                            }
+            var isValid = NameValid().form();
+            if (isValid) {
+                var data = $("#roleForm").serialize();
+                $.ajax({
+                    url: "/Role/Save",
+                    type: "post",
+                    datatype: "json",
+                    data: data,
+                    success: function (result) {
+                        if (result !== "access") {
+                            alert(result);
+                        } else {
+                            $("#closeBaseBtn").click();
+                            DataTable(null);
                         }
-                    });
-                }
-                else {
-                    return;
-                }
-            });
+                    }
+                });
+            }
+            else {
+                return;
+            }
         }
 
         //验证重名
@@ -61,7 +58,7 @@
                         remote: {
                             cache: false,
                             async: false,
-                            url: "/RoleManage/CheckRoleName",
+                            url: "/Role/CheckRoleName",
                             type: "post",
                             datatype: "json",
                             data: {

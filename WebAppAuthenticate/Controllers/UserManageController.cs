@@ -1,16 +1,15 @@
 ﻿using System;
 using AuthenticateBLL;
-using AuthenticateModel;
 using System.Collections.Generic;
 using System.Web.Mvc;
 
+using AuthenticateModel;
 using WebAppAuthenticate.ViewModels;
-using Newtonsoft.Json;
 using WebAppAuthenticate.Filters;
 
 namespace WebAppAuthenticate.Controllers
 {
-    //[HasUserFilter]
+    [HasUserFilter]
     public class UserManageController : CommonController
     {
         /// <summary>
@@ -177,7 +176,7 @@ namespace WebAppAuthenticate.Controllers
         }
 
         /// <summary>
-        /// 检查重名检查用户名是否可用
+        /// 检查重名 检查用户名是否可用
         /// </summary>
         /// <param name="userName">用户名</param>
         /// <param name="id">用户id</param>

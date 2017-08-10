@@ -1,108 +1,136 @@
 ﻿@model WebAppAuthenticate.ViewModels.ModuleFormViewModel
 
-
-@using (Html.BeginForm("Save","Module",FormMethod.Post,new{id="ModuleForm"}))
-{
-    @Html.AntiForgeryToken()
+<div class="tabbable" id="tabs">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#panel_Edit" data-toggle="tab">用户基本信息管理</a>
+        </li>
+        <li>
+            <a href="#panel_RoleJsTree" data-toggle="tab">用户角色分配</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="panel_Edit">
+            <form id="ModuleForm">
+                @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
-        @Html.HiddenFor(model => model.ParentId)
+                <div class="form-horizontal">
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.ParentId)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ChineseName, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ChineseName, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 50 } })
-                @Html.ValidationMessageFor(model => model.ChineseName, "", new { @class = "text-danger" })
-            </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ChineseName, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.ChineseName, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 50 } })
+                            @Html.ValidationMessageFor(model => model.ChineseName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.EnglishName, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.EnglishName, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 50 } })
+                            @Html.ValidationMessageFor(model => model.EnglishName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Url, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" }, maxlength = 100 })
+                            @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Icon, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Icon, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 100 } })
+                            @Html.ValidationMessageFor(model => model.Icon, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Order, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control", required = true } })
+                            @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Status, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.Status)
+                                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.IsDisplay, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.IsDisplay)
+                                @Html.ValidationMessageFor(model => model.IsDisplay, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NavigatePicture, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.NavigatePicture, new { htmlAttributes = new { @class = "form-control", maxlength = 300 } })
+                            @Html.ValidationMessageFor(model => model.NavigatePicture, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-lg-offset-3">
+                            @Model.Error
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-10">
+                            <input type="submit" value="保存" onclick="SaveModule()" class="btn btn-primary" />
+                            <input type="button" value="添加子项" onclick="AddSon();" class="btn btn-info" />
+                            <input type="button" value="清空" onclick="CleanAll();" class="btn btn-default" />
+                        </div>      
+                    </div>
+                </div>
+            </form>
+
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EnglishName, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EnglishName, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 50 } })
-                @Html.ValidationMessageFor(model => model.EnglishName, "", new { @class = "text-danger" })
+        <div class="tab-pane" id="panel_RoleJsTree">
+            <div class="col-md-offset-2" style="margin-top: 20px;">
+                <button type="submit" onclick="SaveRoles()" class="btn btn-primary">保存</button>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Url, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" }, maxlength = 100 })
-                @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Icon, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Icon, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 100 } })
-                @Html.ValidationMessageFor(model => model.Icon, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Order, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control", required = true } })
-                @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Status, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.Status)
-                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+            <div class="col-md-offset-2" style="margin-top: 20px;">
+                <div style="position:relative ; height:600px; overflow:auto">
+                    <div id="ModuleRoleJsTree" style="margin-top: 1em; min-height: 200px;"></div>
                 </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsDisplay, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsDisplay)
-                    @Html.ValidationMessageFor(model => model.IsDisplay, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.NavigatePicture, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.NavigatePicture, new { htmlAttributes = new { @class = "form-control", maxlength = 300 } })
-                @Html.ValidationMessageFor(model => model.NavigatePicture, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-lg-offset-3">
-               @Model.Error
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-3 col-md-10">
-                <input type="submit" value="保存" onclick="SaveModule()" class="btn btn-primary" />
-                <input type="button" value="添加子项" onclick="AddSon();" class="btn btn-info" />
-                <input type="button" value="清空" onclick="CleanAll();" class="btn btn-default" />
-            </div>      
         </div>
     </div>
-}
+</div>
+
+
 <script type="text/javascript">
+    $(function() {
+        RoleJsTree($("#Id").val());
+    });
     function AddSon() {
         var currentId = $("#Id").val();
         $("#ParentId").val(currentId);
@@ -112,28 +140,7 @@
         $("#moduleId,#Id").val("");
     }
 
-    function SaveModule() {
-        $("#ModuleForm").submit(function(e) {
-            e.preventDefault();
-            var data = $("Form").serialize();
-            $.ajax({
-                url: "/Module/Save",
-                datatype: "json",
-                type: "post",
-                data: data,
-                success:function(data) {
-                    if (data === "access") {
-                        alert("保存成功！");
-                        $(".moduleTree").jstree(true).refresh();
-                        CleanAll();
-                    } else {
-                        alert(data);
-                    }
-                }
-            });
-        });
-        return;
-    }
+  
 
     function CleanAll() {
         $("input[type=text]").val("");
@@ -142,5 +149,50 @@
         $("#moduleId").val("");
         $("#Id,#ParentId").val("");
         $('#jsTree').jstree("deselect_all", true);
+    }
+
+    //构建角色树
+    function RoleJsTree(id) {
+        $("#ModuleRoleJsTree").bind("loaded.jstree", function (e, data) {
+            $("#ModuleRoleJsTree").jstree("open_all");
+        }).jstree({
+            "core": {
+                "data":
+                {
+                    "url": "/Module/RoleTreeList?id=" + id,
+                    "dataType": "json"
+                }
+            },
+            "checkbox": {
+                "keep_selected_style": false
+            },
+            "plugins": ["checkbox"]
+        });
+    }
+
+    //保存所选角色
+    function SaveRoles() {
+        var moduleId = $("#Id").val();
+        if (moduleId === "0" || moduleId === "" || moduleId === null || moduleId === "j1_1") {
+            alert("请选择一个模块");
+            return;
+        }
+        var ids = $('#ModuleRoleJsTree').jstree().get_checked(); //获取所有选中的节点ID
+        $.ajax({
+            url: "/Module/SaveChooseRoles",
+            datatype: "json",
+            type: "post",
+            data: {
+                ids: ids.toString(),
+                moduleId: moduleId
+            },
+            success: function(data) {
+                if (data !== "access") {
+                    alert(data);
+                } else {
+                    alert("保存成功！");
+                }
+            }
+        });
     }
 </script>

@@ -1,15 +1,16 @@
 ﻿using System;
 using AuthenticateBLL;
-using AuthenticateModel;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Web.Mvc;
 
+using AuthenticateModel;
 using WebAppAuthenticate.ViewModels;
+using WebAppAuthenticate.Filters;
 
 namespace WebAppAuthenticate.Controllers
 {
-    //[HasUserFilter]
+    [HasUserFilter]
     public class RoleController : CommonController
     {
         /// <summary>
@@ -161,7 +162,7 @@ namespace WebAppAuthenticate.Controllers
         }
 
         /// <summary>
-        /// 检查重名检查角色名是否可用【重新判断逻辑！！】
+        /// 检查重名检查角色名是否可用
         /// </summary>
         /// <param name="roleName">角色名</param>
         /// <param name="id">角色ID</param>
@@ -174,7 +175,7 @@ namespace WebAppAuthenticate.Controllers
         }
 
         /// <summary>
-        /// 获取用户jsTree数据
+        /// 获取用户树数据
         /// </summary>
         /// <param name="id">角色ID</param>
         /// <returns>json格式的JStree</returns>
@@ -218,7 +219,6 @@ namespace WebAppAuthenticate.Controllers
             return Json("access", JsonRequestBehavior.AllowGet);
         }
 
-
         /// <summary>
         /// 获取模块树数据
         /// </summary>
@@ -227,9 +227,41 @@ namespace WebAppAuthenticate.Controllers
         public ActionResult ModuleTreeList(int id = 0)
         {
             RoleBll bll = new RoleBll();
-            var roles = bll.GetRoleModule(id);
-            var jsTree = JsTreeUserWithCheck(roles);
+            var modules = bll.GetRoleModule(id);
+            var jsTree = JsTreeAllModulewhithHead(modules);
             return Json(jsTree, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        ///保存选择的模块
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SaveChooseModules(string ids, int roleId = 0)
+        {
+            if (roleId == 0)
+            {
+                return Json("请选择一个角色");
+            }
+            RoleBll bll = new RoleBll();
+            string[] moduleIds = ids.Split(',');
+            List<int> intIds = new List<int>();
+            foreach (var moduleId in moduleIds)
+            {
+                int intNum;
+                if (int.TryParse(moduleId, out intNum))
+                {
+                    intIds.Add(intNum);
+                }
+            }
+            try
+            {
+                bll.SaveRoleModules(intIds, roleId, int.Parse(Session["UserId"].ToString()));
+            }
+            catch (Exception e)
+            {
+                return Json("保存出错", JsonRequestBehavior.AllowGet);
+            }
+            return Json("access", JsonRequestBehavior.AllowGet);
         }
     }
 }

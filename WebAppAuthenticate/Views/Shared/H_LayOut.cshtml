@@ -40,51 +40,35 @@
             <div class="sidebar-collapse">
                 <ul class="nav" id="side-menu">
                     <!--下拉-->
-                    @*//my*@
                     <li>
                         <a href="#">
                             <i class="fa fa-home"></i>
                             <span class="nav-label">权限管理</span>
-                            <span class="fa arrow"></span>
-                        </a>
-                        <a href="#">
-                            <i class="fa fa-home"></i>
-                            <span class="nav-label">权限管理</span>
-                            <span class="fa arrow"></span>
-                        </a>
-                        <a href="#">
-                            <i class="fa fa-home"></i>
-                            <span class="nav-label">权限管理</span>
-                            <span class="fa arrow"></span>
                         </a>
                     </li>
-
-                    @*//myend*@
-
                     <li>
-                        <a href="#">
-                            <i class="fa fa-home"></i>
-                            <span class="nav-label">权限管理</span>
-                            <span class="fa arrow"></span>
+                        <a href="http://localhost:1836/UserManage/Index">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="nav-label">员工管理</span>
                         </a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                @Html.ActionLink("员工管理", "Index", "UserManage")
-                                @*<a class="J_menuItem" href="`Controller/UserManage/Index.cs" data-index="0">用户管理</a>*@
-                            </li>
-                            <li>
-                                @Html.ActionLink("数据字典管理", "Index", "Dictionary")
-                                @*<a class="J_menuItem" href="#">主页示例二</a>*@
-                            </li>
-                            <li>
-                                @Html.ActionLink("角色管理", "Index", "Role")
-                                @*<a class="J_menuItem" href="#">主页示例三</a>*@
-                            </li>
-                            <li>
-                                @Html.ActionLink("模块管理", "Index", "Module")
-                                @*<a class="J_menuItem" href="#">主页示例四</a>*@
-                            </li>
-                        </ul>
+                    </li>
+                    <li>
+                        <a href="http://localhost:1836/Dictionary/Index">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="nav-label">数据字典管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://localhost:1836/Role/Index">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="nav-label">角色管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://localhost:1836/Module/Index">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="nav-label">模块管理</span>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -97,10 +81,11 @@
                     <div class="navbar-header">
                         <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="glyphicon glyphicon-chevron-left"></i> </a>
                     </div>
+                    
                     <ul class="nav navbar-top-links navbar-right">
                         <li class="dropdown hidden-xs">
-                            <a class="right-sidebar-toggle" aria-expanded="false">
-                                <i class="fa fa-tasks"></i> 主页
+                            <a class="right-sidebar-toggle" aria-expanded="false" href="http://localhost:1836/LogIn/LogIn">
+                                <i class="fa fa-tasks"></i> 注销
                             </a>
                         </li>
                     </ul>
@@ -113,7 +98,7 @@
             <!--footer-->
             <div class="footer">
                 <div class="pull-right">
-                    &copy; 2014-2015 <a href="http://www.zi-han.net/" target="_blank">zihan's blog</a>
+                    &copy; 2017 <a href="#" target="_blank">star park</a>
                 </div>
             </div>
         </div>

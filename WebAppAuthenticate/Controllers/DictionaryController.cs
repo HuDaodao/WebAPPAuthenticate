@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+
 using AuthenticateBLL;
 using WebAppAuthenticate.ViewModels;
 using AuthenticateModel;
@@ -11,9 +10,9 @@ using WebAppAuthenticate.Filters;
 
 namespace WebAppAuthenticate.Controllers
 {
+   [HasUserFilter]
     public class DictionaryController : Controller
     {
-        [HasUserFilter]
         public ActionResult Index()
         {
             return View();

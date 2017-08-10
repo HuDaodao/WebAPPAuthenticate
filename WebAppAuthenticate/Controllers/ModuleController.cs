@@ -18,29 +18,14 @@ namespace WebAppAuthenticate.Controllers
         }
 
         /// <summary>
-        /// 返回模块jsTree数据(换成同步的)
+        /// 返回模块jsTree数据
         /// </summary>
         /// <param name="id">上级Id</param>
         /// <returns></returns>
         public ActionResult TreeList(string id)
         {
             ModuleBll bll=new ModuleBll();
-
-            //int thisLevelId;
-            //int.TryParse(id, out thisLevelId);
-            //var modules = bll.GetSonModule(thisLevelId);
-            //List<JsTreeModel>jsTrees=new List<JsTreeModel>();
-            //foreach (var module in modules)
-            //{
-            //    JsTreeModel jsTree=new JsTreeModel();
-            //    jsTree.id = module.Id;
-            //    jsTree.parent = module.ParentId == 0 ? "#" : module.ParentId.ToString();
-            //    jsTree.children = bll.GetSonModule(module.Id).Count > 0;
-            //    jsTree.text = module.ChineseName;
-            //    jsTrees.Add(jsTree);
-            //}
-
-            var jsTrees = JsTreeAllModulewhithHead();
+            var jsTrees = JsTreeAllModulewhithHead(null);
             return Json(jsTrees, JsonRequestBehavior.AllowGet);
         }
 
@@ -135,13 +120,22 @@ namespace WebAppAuthenticate.Controllers
             else
             {
                 ModuleBll bll = new ModuleBll();
-                try
+                int parentId = int.Parse(id.ToString());
+                int sonCount = bll.GetSonModule(parentId).Count;
+                if (sonCount != 0)
                 {
-                    bll.DeleteMain(int.Parse(id.ToString()));
+                    result = "有子模块不能删除";
                 }
-                catch (Exception e)
+                else
                 {
-                    result = "删除出错！";
+                    try
+                    {
+                        bll.DeleteMain(int.Parse(id.ToString()));
+                    }
+                    catch (Exception e)
+                    {
+                        result = "删除出错！";
+                    }
                 }
             }
             return Json(result);
@@ -190,6 +184,19 @@ namespace WebAppAuthenticate.Controllers
                 return Json("保存出错", JsonRequestBehavior.AllowGet);
             }
             return Json("access", JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 检查重名 检查模块名是否可用
+        /// </summary>
+        /// <param name="moduleName">用户名</param>
+        /// <param name="id">用户id</param>
+        /// <returns>true:是，false:否</returns>
+        public JsonResult CheckModuleName(string moduleName, int id)
+        {
+            ModuleBll bll = new ModuleBll();
+            var result = bll.CheckModuleName(moduleName, id);
+            return Json(result);
         }
     }
 }

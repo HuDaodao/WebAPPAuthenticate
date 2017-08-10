@@ -99,8 +99,6 @@
                     "sEmptyTable": "表中无数据存在！",
                     "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
                     "sInfoFiltered": "数据表中共为 _MAX_ 条记录",
-                    //"sSearchPlaceholder": "🔍 姓名", //搜索框内占位符
-                    //"sSearch": "查找 ", //搜索框前的字体
                     "oPaginate": {
                         "sFirst": "首页",
                         "sPrevious": "上一页",
@@ -125,6 +123,60 @@
                 function() {
                     $("#userModel").modal("show");
                 });
+        }
+
+        //保存用户基本信息
+        function SaveUser() {
+            var isValid = NameValid().form();
+            if (isValid) {
+                var data = $("#userForm").serialize();
+                $.ajax({
+                    url: "/UserManage/Save",
+                    type: "post",
+                    datatype: "json",
+                    data: data,
+                    success: function(result) {
+                        if (result !== "access") {
+                            alert(result);
+                        } else {
+                            $("#closeBtn1").click();
+                            DataTable(null, null);
+                        }
+                    }
+                });
+            } else {
+                return;
+            }
+        }
+
+        //验证重名
+        function NameValid() {
+            return $("#userForm").validate({
+                rules: {
+                    UserName: {
+                        remote: {
+                            cache: false,
+                            async: false,
+                            url: "/UserManage/CheckUserName",
+                            type: "post",
+                            datatype: "json",
+                            data: {
+                                userName: function() {
+                                    return $("#UserName").val();
+                                },
+                                id: function() {
+                                    return $("#Id").val();
+                                }
+                            }
+                        }
+                    }
+                },
+                messages: {
+                    UserName: {
+                        remote: "这个名字已经有人用过了"
+                    }
+                }
+            });
         }
 
         //删除

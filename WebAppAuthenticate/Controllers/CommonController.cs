@@ -1,10 +1,8 @@
-﻿using AuthenticateBLL;
-using AuthenticateModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
+
+using AuthenticateModel;
+using AuthenticateBLL;
 using WebAppAuthenticate.ViewModels;
 
 namespace WebAppAuthenticate.Controllers
@@ -80,15 +78,16 @@ namespace WebAppAuthenticate.Controllers
         /// <summary>
         /// 模块树数据绑定
         /// </summary>
+        /// <paramref name="ids">模块id列表</paramref>
         /// <returns>用户树数据</returns>
-        public JsTreeCheck JsTreeAllModulewhithHead()
+        public JsTreeCheck JsTreeAllModulewhithHead(List<int> ids)
         {
             ModuleBll bll = new ModuleBll();
             JsTreeCheck jst = new JsTreeCheck();
             jst.id = 0;
             jst.text = "所有模块";
             var childrenModule = bll.GetSonModule(0);
-            jst.children = JsTreeAllModule(childrenModule);
+            jst.children = JsTreeAllModule(childrenModule,ids);
             return jst;
         }
 
@@ -96,24 +95,38 @@ namespace WebAppAuthenticate.Controllers
         /// 递归拼出模块树
         /// </summary>
         /// <param name="modules">模块列表</param>
+        /// <param name="ids">模块id列表</param>
         /// <returns>模块列表</returns>
-        public List<JsTreeCheck> JsTreeAllModule(List<Module> modules)
+        public List<JsTreeCheck> JsTreeAllModule(List<Module> modules,List<int>ids)
         {
             ModuleBll bll=new ModuleBll();
             List<JsTreeCheck> jsTreeList = new List<JsTreeCheck>();
             foreach (var module in modules)
             {
-                JsTreeCheck  jsTree=new JsTreeCheck();
-                jsTree.id = module.Id;
-                jsTree.text = module.ChineseName;
+                State childState = new State();
+                if (ids != null)
+                {
+                    if (ids.Contains(module.Id))
+                    {
+                        childState.selected = true;
+                    }
+                }
+                JsTreeCheck jsTree = new JsTreeCheck
+                {
+                    id = module.Id,
+                    text = module.ChineseName,
+                    state =childState
+                };
                 var childrenModel = bll.GetSonModule(module.Id);
                 if (childrenModel.Count != 0)
                 {
-                      jsTree.children=JsTreeAllModule(childrenModel);
+                      jsTree.children=JsTreeAllModule(childrenModel,ids);
                 }
                 jsTreeList .Add(jsTree);
             }
             return jsTreeList;
         }
+
+
     }
 }

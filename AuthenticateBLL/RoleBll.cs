@@ -164,7 +164,7 @@ namespace AuthenticateBLL
             using (AuthentContext db = new AuthentContext())
             {
                 //先要删除这个角色的用户
-                var users = db.UserRole.Where(ur => ur.RoleId == roleId && userIds.Contains(ur.UserId));
+                var users = db.UserRole.Where(ur => ur.RoleId == roleId);
                 db.UserRole.RemoveRange(users);
 
                 //再重新保存
@@ -185,7 +185,38 @@ namespace AuthenticateBLL
         }
 
         /// <summary>
-        /// 检查角色名是否可(true:是，false:否)【重新判断逻辑！！！】
+        /// 保存选择的模块
+        /// </summary>
+        /// <param name="moduleIds">模块Id数组</param>
+        /// <param name="roleId">角色ID</param>
+        /// <param name="changeUser">修改人ID</param>
+        public void SaveRoleModules(List<int> moduleIds, int roleId, int changeUser)
+        {
+            using (AuthentContext db = new AuthentContext())
+            {
+                //先要删除这个角色的模块
+                var modules = db.RoleModule.Where(rm => rm.RoleId == roleId );
+                db.RoleModule.RemoveRange(modules);
+
+                //再重新保存
+                List<RoleModule> roleModules = new List<RoleModule>();
+                foreach (var moduleId in moduleIds)
+                {
+                    RoleModule roleModule = new RoleModule();
+                    roleModule.ModuleId = moduleId;
+                    roleModule.RoleId = roleId;
+                    roleModule.LastChangeTime = DateTime.Now;
+                    roleModule.LastChangeUser = changeUser;
+                    roleModules.Add(roleModule);
+                }
+                db.RoleModule.AddRange(roleModules);
+
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 检查角色名是否可(true:是，false:否)
         /// </summary>
         /// <param name="roleName">角色名</param>
         /// <param name="id">角色ID</param>

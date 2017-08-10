@@ -109,12 +109,8 @@ namespace AuthenticateBLL
             using (AuthentContext db = new AuthentContext())
             {
                 //先要删除这个模块的角色
-                var roles = db.RoleModule.Where(rm => rm.ModuleId == moduleId && roleIds.Contains(rm.RoleId));
+                var roles = db.RoleModule.Where(rm => rm.ModuleId == moduleId );
                 db.RoleModule.RemoveRange(roles);
-
-                ////判断他是不是子模块
-                //Module currentModule = db.Module.Where(module => module.Id == moduleId).FirstOrDefault();
-                //var a = currentModule.ParentId;
 
                 //再重新保存
                 List<RoleModule> roleModels = new List<RoleModule>();
@@ -152,5 +148,23 @@ namespace AuthenticateBLL
             }
         }
 
+        /// <summary>
+        /// 检查模块名是否可用
+        /// </summary>
+        /// <param name="moduleName">模块名字</param>
+        /// <param name="id">当前模块的ID</param>
+        /// <returns></returns>
+        public bool CheckModuleName(string moduleName, int id)
+        {
+            using (AuthentContext db = new AuthentContext())
+            {
+                var module = db.Module.FirstOrDefault(mod => mod.ChineseName == moduleName);
+                if (module != null)
+                {
+                    return module.Id == id;
+                }
+                return true;
+            }
+        }
     }
 }

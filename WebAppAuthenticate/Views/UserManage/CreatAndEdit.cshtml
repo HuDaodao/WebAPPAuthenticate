@@ -12,7 +12,7 @@
                 用户信息
             </h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="height: 680px;" >
             <div class="tabbable" id="tabs">
                 <ul class="nav nav-tabs">
                     <li class="active">
@@ -24,32 +24,31 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="panel_userBaseMsg">
-                        @using (Html.BeginForm("Save", "UserManage", FormMethod.Post,new{id="userForm"}))
-                        {
+                        <form id="userForm">
                             <div class="form-horizontal">
-                                @Html.HiddenFor(mode=>Model.Id)
+                                @Html.HiddenFor(mode => Model.Id)
                                 @*用户名*@
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.UserName, new {@class = "control-label col-md-2"})
+                                    @Html.LabelFor(model => model.UserName, new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.UserName, new {htmlAttributes = new {@class = "form-control", required = true,maxlength = 50 } })
-                                        @Html.ValidationMessageFor(model => model.UserName, "", new {@class = "text-danger"})
+                                        @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 50 } })
+                                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 @*密码*@
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.PassWord, new {@class = "control-label col-md-2"})
+                                    @Html.LabelFor(model => model.PassWord, new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.PassWord, new {htmlAttributes = new {@class = "form-control", required = true, maxlength = 100 } })
-                                        @Html.ValidationMessageFor(model => model.PassWord, "", new {@class = "text-danger"})
+                                        @Html.EditorFor(model => model.PassWord, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 100 } })
+                                        @Html.ValidationMessageFor(model => model.PassWord, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 @*真名*@
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.RealName, new {@class = "control-label col-md-2"})
+                                    @Html.LabelFor(model => model.RealName, new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.RealName, new {htmlAttributes = new {@class = "form-control", required = true, maxlength = 50 } })
-                                        @Html.ValidationMessageFor(model => model.RealName, "", new {@class = "text-danger"})
+                                        @Html.EditorFor(model => model.RealName, new { htmlAttributes = new { @class = "form-control", required = true, maxlength = 50 } })
+                                        @Html.ValidationMessageFor(model => model.RealName, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 @*性别*@
@@ -75,7 +74,7 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Phone, new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control",maxlength=30 } })
+                                        @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", maxlength = 30 } })
                                         @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
@@ -83,7 +82,7 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Age, new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @class = "form-control",max=120 } })
+                                        @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @class = "form-control", max = 120 } })
                                         @Html.ValidationMessageFor(model => model.Age, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
@@ -97,28 +96,30 @@
                                 </div>
                                 @*是否启用*@
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Status , new { @class = "control-label col-md-2" })
+                                    @Html.LabelFor(model => model.Status, new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
                                         @Html.DropDownList("Status", new List<SelectListItem>
                                         {
                                             new SelectListItem {Text = "否", Value = "false", Selected = false},
                                             new SelectListItem {Text = "是", Value = "true", Selected = true}
-                                        }, new { @class = "form-control", onselect=true })
+                                        }, new { @class = "form-control", onselect = true })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-offset-5 col-md-10">
-                                        <button type="button" id="closeBtn1"  class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        <button type="button" id="closeBtn1" class="btn btn-default" data-dismiss="modal">关闭</button>
                                         <button type="submit" onclick="SaveUser()" class="btn btn-primary">保存</button>
                                     </div>
                                 </div>
                             </div>
-                        }
+                        </form>
                     </div>
                     <div class="tab-pane" id="panel_userHaveRoles">
-                        <div id="UserRoleJsTree" style="margin-top: 1em; min-height: 200px;"></div>
-                        <button type="button" id="closeBtn2"  class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="submit" onclick="SaveRoles()" class="btn btn-primary">保存</button>
+                        <div class="col-md-offset-2" style="margin-top: 20px;">
+                            <div id="UserRoleJsTree" style="margin-top: 1em; min-height: 200px;"></div>
+                            <button type="button" id="closeBtn2" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" onclick="SaveRoles()" class="btn btn-primary">保存</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -131,65 +132,6 @@
     $(function () {
         RoleJsTree($("#Id").val());
     });
-
-    //保存用户基本信息
-    function SaveUser() {
-        $("#userForm").submit(function (e) {
-            e.preventDefault();
-            if (NameValid().form()) {
-                var data = $("#userForm").serialize();
-                $.ajax({
-                    url: "/UserManage/Save",
-                    type: "post",
-                    datatype: "json",
-                    //async: false,
-                    data: data,
-                    success: function (result) {
-                        if (result !== "access") {
-                            alert(result);
-                        } else {
-                            $("#closeBtn1").click();
-                            DataTable(null, null);
-                        }
-                    },
-                });
-            }
-            else {
-                return;
-            }
-        });
-    }
-
-    //验证重名
-    function NameValid() {
-        return $("#userForm").validate({
-            rules: {
-                UserName: {
-                    remote: {
-                        cache: false,
-                        async: false,
-                        url: "/UserManage/CheckUserName",
-                        type: "post",
-                        datatype: "json",
-                        data: {
-                            userName: function () {
-                                return $("#UserName").val();
-                            },
-                            id: function () {
-                                return $("#Id").val();
-                            }
-                        }
-                    }
-                }
-            },
-            messages: {
-                UserName: {
-                    remote: "这个名字已经有人用过了"
-                }
-            }
-        });
-    }
-
 
     //加载角色jstree
     function RoleJsTree(id) {

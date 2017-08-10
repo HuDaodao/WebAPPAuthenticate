@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+
 using AuthenticateBLL;
 using WebAppAuthenticate.ViewModels;
 using AuthenticateModel;
@@ -13,6 +14,7 @@ namespace WebAppAuthenticate.Controllers
         /// <returns></returns>
         public ActionResult LogIn()
         {
+            Session["HasUser"] = true;
             LoginViewModel logModel=new LoginViewModel();
             return View(logModel);
         }

@@ -9,20 +9,20 @@
 @section HeaderSection{
     @*jsTree CSS*@
     <script src="~/Scripts/jstree.js"></script>
-    <link href="~/Content/style.min.css" rel="stylesheet" />
+    <link href="~/Content/style.min.css" rel="stylesheet"/>
     @*DataTable*@
     <script type="text/javascript">
         $(function() {
             ModulejsTree();
-            //$("#moduleId").val("");
         });
 
         //模块jstree
         function ModulejsTree() {
-            $(".moduleTree").on("loaded.jstree",function(e, data) {
-                    $('#jsTree').jstree("deselect_all", true);
-                    $("#jsTree").jstree("open_all");
-                })
+            $(".moduleTree").on("loaded.jstree",
+                    function(e, data) {
+                        $('#jsTree').jstree("deselect_all", true);
+                        $("#jsTree").jstree("open_all");
+                    })
                 .jstree({
                     "core": {
                         "multiple": false,
@@ -31,9 +31,6 @@
                         "data": {
                             "url": "/Module/TreeList",
                             "datatype": "json",
-                            //"data": function(node, callback) {
-                            //    return { "id": node.id === "#" ? "0" : node.id };
-                            //}
                         }
                     },
                     "types": {
@@ -53,7 +50,6 @@
                         var selectedNode = inst.get_node(data.selected);
                         AddCreate(selectedNode.id);
                         $("#moduleId").val(selectedNode.id);
-                        RoleJsTree();
                     });
         }
 
@@ -64,13 +60,13 @@
             }
             $("#moduleId").val("");
             var loadUrl = "/Module/ModuleDetail?id=" + moduleId;
-            $("#panel_Edit").load(loadUrl);
+            $("#rightPart").load(loadUrl);
         }
 
         //删除模块
         function Delete() {
             var ref = $("#moduleId").val();
-            if (ref === null || ref === "" || ref ==="j1_1") {
+            if (ref === null || ref === "" || ref === "j1_1") {
                 alert("请选择一个模块！");
                 return false;
             }
@@ -81,11 +77,11 @@
                     datatype: "json",
                     type: "post",
                     success: function(data) {
-                        if (data ==="accesss") {
+                        if (data === "accesss") {
                             $(".moduleTree").jstree(true).refresh();
-                            CleanAll();
+                            AddCreate(0);
                         } else {
-                            alert("删除失败！");
+                            alert(data);
                         }
                     }
                 });
@@ -93,46 +89,55 @@
             return false;
         }
 
-        //构建角色分配jstree
-        function RoleJsTree(id) {
-            $("#ModuleRoleJsTree").bind("loaded.jstree", function (e, data) {
-                $("#ModuleRoleJsTree").jstree("open_all"); 
-            }).jstree({
-                "core": {
-                    "data":
-                    {
-                        "url": "/Module/RoleTreeList?id="+id,
-                        "dataType": "json"
+        function SaveModule() {
+            var isvalid = NameValid().form();
+            if (isvalid) {
+                var data = $("Form").serialize();
+                $.ajax({
+                    url: "/Module/Save",
+                    datatype: "json",
+                    type: "post",
+                    data: data,
+                    success: function(data) {
+                        if (data === "access") {
+                            alert("保存成功！");
+                            $(".moduleTree").jstree(true).refresh();
+                            CleanAll();
+                        } else {
+                            alert(data);
+                        }
                     }
-                },
-                "checkbox": {
-                    "keep_selected_style": false
-                },
-                "plugins": ["checkbox"]
-            });
-        }
-
-        //保存所选角色
-        function SaveRoles() {
-            var moduleId = $("#moduleId").val();
-            if (moduleId === "0" || moduleId === "" || moduleId === null || moduleId ==="j1_1") {
-                alert("请选择一个模块");
+                });
+            } else {
                 return;
             }
-            var ids = $('#ModuleRoleJsTree').jstree().get_checked(); //获取所有选中的节点ID
-            $.ajax({
-                url: "/Module/SaveChooseRoles",
-                datatype: "json",
-                type: "post",
-                data: {
-                    ids: ids.toString(),
-                    moduleId: moduleId
+        }
+
+        //验证重名
+        function NameValid() {
+            return $("#ModuleForm").validate({
+                rules: {
+                    ChineseName: {
+                        remote: {
+                            cache: false,
+                            async: false,
+                            url: "/Module/CheckModuleName",
+                            type: "post",
+                            datatype: "json",
+                            data: {
+                                moduleName: function() {
+                                    return $("#ChineseName").val();
+                                },
+                                id: function() {
+                                    return $("#Id").val();
+                                }
+                            }
+                        }
+                    }
                 },
-                success:function(data) {
-                    if (data !== "access") {
-                        alert(data);
-                    } else {
-                        alert("保存成功！");
+                messages: {
+                    ChineseName: {
+                        remote: "这个名字已经有人用过了"
                     }
                 }
             });
@@ -153,25 +158,5 @@
     <input type="hidden" id="moduleId" value="0"/>
     @*右边编辑*@
     <div class="col-md-10" id="rightPart">
-        <div class="tabbable" id="tabs">
-            <ul class="nav nav-tabs">
-                <li class="active">
-                    <a href="#panel_Edit" data-toggle="tab">用户基本信息管理</a>
-                </li>
-                <li>
-                    <a href="#panel_RoleJsTree" data-toggle="tab">用户角色分配</a>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active" id="panel_Edit"></div>
-                <div class="tab-pane" id="panel_RoleJsTree">
-                    <div class="col-md-offset-3">
-                        <div id="ModuleRoleJsTree" style="margin-top: 1em; min-height: 200px;"></div>
-                        <button type="button" id="closeBtn2" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="submit" onclick="SaveRoles()" class="btn btn-primary">保存</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>

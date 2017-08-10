@@ -178,7 +178,7 @@ namespace AuthenticateBLL
             using (AuthentContext db = new AuthentContext())
             {
                 //先要删除这个用户的角色
-                var roles = db.UserRole.Where(ur => ur.UserId == userId && roleIds.Contains(ur.RoleId));
+                var roles = db.UserRole.Where(ur => ur.UserId == userId );
                 db.UserRole.RemoveRange(roles);
 
                 //再重新保存

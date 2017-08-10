@@ -203,14 +203,19 @@
     <Content Include="Content\font-awesome.min93e3.css" />
     <Content Include="Content\jquery.dataTables.css" />
     <Content Include="Content\jquery.dataTables.min.css" />
-    <Content Include="Content\layer.css" />
+    <Content Include="Content\skin\layer.css" />
     <Content Include="Content\morris-0.4.3.min.css" />
     <Content Include="Content\style.css" />
     <Content Include="Content\style.min.css" />
     <Content Include="Content\style.min862f.css" />
+    <Content Include="Content\throbber.gif" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\sort_asc.png" />
+    <Content Include="images\sort_desc.png" />
+    <Content Include="images\sort_both.png" />
+    <Content Include="images\sort_asc0.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="fonts\fontawesome-webfont93e3.ttf" />
@@ -237,6 +242,7 @@
     <Content Include="Scripts\jstree.state.js" />
     <Content Include="Scripts\jstree.types.js" />
     <Content Include="Scripts\jstree.wholerow.js" />
+    <Content Include="Scripts\layer.ext.js" />
     <Content Include="Scripts\layer.min.js" />
     <Content Include="Scripts\messages_zh.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
@@ -271,7 +277,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="images\" />
     <Folder Include="Views\Common\" />
   </ItemGroup>
   <ItemGroup>
