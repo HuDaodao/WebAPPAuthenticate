@@ -95,8 +95,8 @@ namespace WebAppAuthenticate.Controllers
         /// <summary>
         /// 递归拼出模块树
         /// </summary>
-        /// <param name="modules"></param>
-        /// <returns></returns>
+        /// <param name="modules">模块列表</param>
+        /// <returns>模块列表</returns>
         public List<JsTreeCheck> JsTreeAllModule(List<Module> modules)
         {
             ModuleBll bll=new ModuleBll();

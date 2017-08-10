@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-offset-2">
-                                        <button type="button" id="closeBtn1" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        <button type="button" id="closeBaseBtn" class="btn btn-default" data-dismiss="modal">关闭</button>
                                         <button type="submit" onclick="SaveRoles()" class="btn btn-primary">保存</button>
                                     </div>
                                 </div>
@@ -67,15 +67,21 @@
                     <div class="tab-pane" id="panel_userHaveRoles">
                         <div class="col-md-offset-2">
                             <div id="UserJsTree" style="margin-top: 1em; min-height: 200px;"></div>
-                            <button type="button" id="closeBtn2" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" id="closeUserBtn" class="btn btn-default" data-dismiss="modal">关闭</button>
                             <button type="submit" onclick="SaveRoleUsers()" class="btn btn-primary">保存</button>
                         </div>
                     </div>
                     <div class="tab-pane" id="panel_userModule">
-                        模块角色
+                        <div id="ModuleJsTree" style="margin-top: 1em; min-height: 200px;"></div>
+                        <button type="button" id="closeRoleBtn" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" onclick="SaveRoleModules()" class="btn btn-primary">保存</button>
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <div class="footer">
+            this is footer
         </div>
     </div>
 </div>
@@ -84,9 +90,10 @@
 <script type="text/javascript">
     $(function () {
         UserJsTree($("#Id").val());
+        ModuleJsTree($("#Id").val());
     });
 
-    //加载UserJstree
+    //加载用户数
     function UserJsTree(id) {
         $("#UserJsTree").bind("loaded.jstree", function (e, data) {
             $("#UserJsTree").jstree("open_all");
@@ -115,6 +122,51 @@
         var ids = $('#UserJsTree').jstree().get_checked(); //获取所有选中的节点ID
         $.ajax({
             url: "/Role/SaveChooseUsers",
+            datatype: "json",
+            type: "post",
+            data: {
+                ids: ids.toString(),
+                roleId: roleId
+            },
+            success:function(data) {
+                if (data !== "access") {
+                    alert(data);
+                } else {
+                    alert("保存成功！");
+                }
+            }
+        });
+    }
+
+    //加载模块树
+    function ModuleJsTree(id) {
+        $("#ModuleJsTree").bind("loaded.jstree", function (e, data) {
+            $("#ModuleJsTree").jstree("open_all");
+        }).jstree({
+            "core": {
+                "data":
+                {
+                    "url": "/Role/ModuleTreeList?id="+id,
+                    "dataType": "json"
+                }
+            },
+            "checkbox": {
+                "keep_selected_style": false
+            },
+            "plugins": ["checkbox"]
+        });
+    }
+
+    //保存所选模块
+    function SaveRoleModules() {
+        var roleId = $("#Id").val();
+        if (roleId === "0" || roleId === "" || roleId===null) {
+            alert("请选择一个角色");
+            return;
+        }
+        var ids = $('#ModuleJsTree').jstree().get_checked(); //获取所有选中的节点ID
+        $.ajax({
+            url: "/Role/SaveChooseModules",
             datatype: "json",
             type: "post",
             data: {

@@ -42,6 +42,26 @@ namespace AuthenticateBLL
         }
 
         /// <summary>
+        /// 获取一个角色的所有模块Id
+        /// </summary>
+        /// <param name="id">角色ID</param>
+        /// <returns>角色的模块Id列表</returns>
+        public List<int> GetRoleModule(int id)
+        {
+            using (AuthentContext db = new AuthentContext())
+            {
+                var roleModules = db.RoleModule.Where(ur => ur.RoleId == id).ToList();
+                List<int> modules = new List<int>();
+                foreach (var roleModule in roleModules)
+                {
+                    modules.Add(roleModule.ModuleId);
+                }
+                return modules;
+            }
+        }
+
+
+        /// <summary>
         /// 分页获取角色列表
         /// </summary>
         /// <param name="name">角色名</param>

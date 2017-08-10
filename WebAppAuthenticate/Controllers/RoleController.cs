@@ -176,7 +176,7 @@ namespace WebAppAuthenticate.Controllers
         /// <summary>
         /// 获取用户jsTree数据
         /// </summary>
-        /// <param name="id">用户ID</param>
+        /// <param name="id">角色ID</param>
         /// <returns>json格式的JStree</returns>
         public ActionResult UserTreeList(int id=0)
         {
@@ -216,6 +216,20 @@ namespace WebAppAuthenticate.Controllers
                 return Json("保存出错", JsonRequestBehavior.AllowGet);
             }
             return Json("access", JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 获取模块树数据
+        /// </summary>
+        /// <param name="id">角色ID</param>
+        /// <returns>json格式的JStree</returns>
+        public ActionResult ModuleTreeList(int id = 0)
+        {
+            RoleBll bll = new RoleBll();
+            var roles = bll.GetRoleModule(id);
+            var jsTree = JsTreeUserWithCheck(roles);
+            return Json(jsTree, JsonRequestBehavior.AllowGet);
         }
     }
 }
